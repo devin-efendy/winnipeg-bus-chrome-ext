@@ -1,26 +1,19 @@
+/** Class: App
+ *  Store all the saved conversions into the state 'history'
+ *  Render the ConvertrUI (the main UI) and the List of History (HistoryList)
+ * */
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <div className="app-container">
+        <h1>INSERT_TITLE</h1>
+        <p>ReactJS for Chrome Extension</p>
+        <p>Edit src/App.js</p>
+      </div>
+    );
+  }
 }
-
 export default App;
