@@ -8,8 +8,6 @@ import StopList from './components/StopList';
 import openData from './api/openData';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-// import { indigo, lightBlue } from '@material-ui/core/colors';
-
 const styles = theme => ({
   root: {
     // padding: theme.spacing.unit * 4,
@@ -41,6 +39,10 @@ export default withStyles(styles)(
     };
 
     componentDidMount() {
+      this.setStopViaPosition();
+    }
+
+    setStopViaPosition = () => {
       window.navigator.geolocation.getCurrentPosition(
         position => {
           this.setState({ position }, async () => {
@@ -67,7 +69,7 @@ export default withStyles(styles)(
           console.log(err.message);
         }
       );
-    }
+    };
 
     setupStopsAndRoutes = stopsList => {
       this.setState({ stopsList }, () =>

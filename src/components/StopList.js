@@ -1,7 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { List, ListItem, ListItemText } from '@material-ui/core/';
+import { amber, indigo } from '@material-ui/core/colors';
+import {
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Typography
+} from '@material-ui/core/';
+
+const insertSpace = n => {
+  let str = '';
+  for (let i = 0; i < n; i++) {
+    str += '\u00A0';
+  }
+  return str;
+};
 
 const styles = theme => ({
   root: {
@@ -13,41 +28,77 @@ const styles = theme => ({
 });
 
 class StopList extends React.Component {
-  formatStopName = name => {
-    const quadrant = `${name.charAt(0)}B`;
-    let detail = name.substr(name.indexOf(' '), name.length);
-    detail = detail.replace('at', '@');
-    let nameResult = `${quadrant} ${detail}`;
-    return nameResult;
-  };
-
   render() {
     const { classes, stops } = this.props;
 
     const RenderedItem = stops.map(item => {
       if (stops.size === this.props.stopRoutePair.size) {
-        const name = this.formatStopName(item.name);
-        const walkDistance = item.distances.walking;
+        const walkDistance = Math.round(item.distances.walking);
         const stopRoute = this.props.stopRoutePair;
         const data = stopRoute.find(items => items.key === item.key);
         let routes = '';
         if (data) {
-          data.routes.forEach(el => {
-            routes += el.number.toString() + ' ';
+          routes = data.routes.map(el => {
+            let paperBGColor = indigo[500];
+            let paperFontColor = 'white';
+            if (el.coverage === 'rapid transit') {
+              paperBGColor = amber[500];
+              paperFontColor = 'black';
+            }
+            return (
+              <Paper
+                elevation={0}
+                style={{
+                  marginRight: '10px',
+                  padding: '3px',
+                  width: '27px',
+                  height: '27px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  alignContent: 'center',
+                  justifyContent: 'center',
+                  background: `${paperBGColor}`,
+                  color: `${paperFontColor}`
+                }}
+              >
+                <Typography color="inherit">{el.number.toString()}</Typography>
+              </Paper>
+            );
           });
-          console.log(routes);
         }
 
         return (
-          <ListItem button key={item.key}>
-            <ListItemText primary={name} secondary={routes} />
-            <ListItemText secondary={`${walkDistance}m away`} />
+          <ListItem
+            button
+            key={item.key}
+            divider={true}
+            style={{ position: 'relative', overflow: 'auto' }}
+          >
+            <div>
+              <ListItemText
+                primaryTypographyProps={{ variant: 'subheading' }}
+                secondaryTypographyProps={{ variant: 'body1' }}
+                primary={item.name}
+                secondary={`#${item.number}${insertSpace(
+                  12
+                )}${walkDistance} m away`}
+              />
+              <div
+                style={{
+                  display: 'flex',
+                  flexGrow: 1,
+                  marginTop: '10px'
+                }}
+              >
+                {routes}
+              </div>
+            </div>
           </ListItem>
         );
       } else {
         return (
           <ListItem button key={item.key}>
-            <ListItemText primary={this.formatStopName(item.name)} />
+            <ListItemText primary={item.name} />
           </ListItem>
         );
       }
