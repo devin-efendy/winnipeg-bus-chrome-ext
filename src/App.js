@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-
 import { Paper, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import SearchBar from './components/SearchBar';
 import StopList from './components/StopList';
-import openData from './api/openData';
-import CircularProgress from '@material-ui/core/CircularProgress';
+
+import TransitUtil from './util/TransitUtil';
 
 const styles = theme => ({
   root: {
@@ -16,13 +16,23 @@ const styles = theme => ({
   },
   progress: {
     margin: theme.spacing.unit * 3
+  },
+  loadingPage: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column'
   }
 });
 
 export default withStyles(styles)(
   class App extends Component {
     state = {
-      stopsRoute: [],
+      activeStop: [],
+      activeStopSchedule: [],
+      allStopsRoute: [],
       stopsList: [],
       position: null,
       searchBarInput: ''
@@ -38,62 +48,60 @@ export default withStyles(styles)(
       e.preventDefault();
     };
 
+    handleBusStopClick = busStop => {
+      this.setActiveStopSchedule(busStop);
+    };
+
     componentDidMount() {
-      this.setStopViaPosition();
+      this.setStopViaUserPosition();
     }
 
-    setStopViaPosition = () => {
+    setStopViaUserPosition = () => {
       window.navigator.geolocation.getCurrentPosition(
         position => {
-          this.setState({ position }, async () => {
+          this.setState({ position }, () => {
             const lat = this.state.position.coords.latitude;
             const lon = this.state.position.coords.longitude;
-            await openData
-              .get(
-                '/stops.json?distance=1000&lat=' +
-                  lat +
-                  '&lon=' +
-                  lon +
-                  '&walking=true&max-results=10&api-key=FO8ZSABX3wyHFEo062j'
-              )
-              .then(res => {
-                this.setupStopsAndRoutes(res.data.stops);
-              })
-              .catch(err => {
-                console.log(err.message);
-                this.setState({ stopsList: [] });
-              });
-          });
+
+            TransitUtil.getStopsFromPosition(lat, lon).then(response => {
+              this.setupStopsAndRoutes(response.data.stops);
+            }); //getStopsFromPosition
+          }); // Set State
         },
         err => {
           console.log(err.message);
-        }
-      );
-    };
+        } // Geolocation error
+      ); // Geolocation call
+    }; // setStopViaUserPosition
 
     setupStopsAndRoutes = stopsList => {
       this.setState({ stopsList }, () =>
         this.state.stopsList.forEach(stop => {
-          this.setStopSchedule(stop.key);
+          this.setStopRoute(stop.key);
         })
       );
     };
 
-    setStopSchedule = async stop => {
-      await openData
-        .get(`/routes.json?stop=${stop}?&api-key=FO8ZSABX3wyHFEo062j`)
-        .then(res => {
-          this.setState(({ stopsRoute }) => ({
-            stopsRoute: [
-              ...stopsRoute,
-              { key: stop, number: stop, routes: res.data.routes }
-            ]
-          }));
-        })
-        .catch(err => {
-          console.log(err.message);
-          return [];
-        });
+    setStopRoute = stop => {
+      const updatePair = routes => {
+        this.setState(({ allStopsRoute }) => ({
+          allStopsRoute: [
+            ...allStopsRoute,
+            { key: stop, number: stop, routes: routes }
+          ]
+        }));
+      };
+
+      TransitUtil.getRoute(stop).then(response => {
+        updatePair(response.data.routes);
+      }); // getRoute
+    }; // setStopRoute
+
+    setActiveStopSchedule = async stop => {
+      TransitUtil.getSchedule(stop).then(({ data }) => {
+        const schedule = TransitUtil.parseSchedule(data);
+        console.log(schedule);
+      });
     };
 
     render() {
@@ -104,25 +112,17 @@ export default withStyles(styles)(
         if (this.state.position && this.state.stopsList) {
           return (
             <StopList
+              onBusStopClick={this.handleBusStopClick}
               stops={this.state.stopsList}
-              stopRoutePair={this.state.stopsRoute}
+              stopRoutePair={this.state.allStopsRoute}
               getSchedule={this.getStopSchedule}
             />
           );
         } else {
           return (
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column'
-              }}
-            >
+            <div className={classes.loadingPage}>
               <CircularProgress size={60} className={classes.progress} />
-              <Typography variant="display1">Looking for stops...</Typography>
+              <Typography variant="headline">Looking for stops...</Typography>
             </div>
           );
         }

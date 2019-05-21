@@ -24,6 +24,15 @@ const styles = theme => ({
     position: 'relative',
     overflow: 'auto',
     height: '484px'
+  },
+  paperBus: {
+    marginRight: '10px',
+    padding: '3px',
+    width: '27px',
+    height: '27px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
 
@@ -36,7 +45,7 @@ class StopList extends React.Component {
         const walkDistance = Math.round(item.distances.walking);
         const stopRoute = this.props.stopRoutePair;
         const data = stopRoute.find(items => items.key === item.key);
-        let routes = '';
+        let routes = [];
         if (data) {
           routes = data.routes.map(el => {
             let paperBGColor = indigo[500];
@@ -45,18 +54,14 @@ class StopList extends React.Component {
               paperBGColor = amber[500];
               paperFontColor = 'black';
             }
+
             return (
               <Paper
+                key={el.key}
+                square={true}
                 elevation={0}
+                className={classes.paperBus}
                 style={{
-                  marginRight: '10px',
-                  padding: '3px',
-                  width: '27px',
-                  height: '27px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  alignContent: 'center',
-                  justifyContent: 'center',
                   background: `${paperBGColor}`,
                   color: `${paperFontColor}`
                 }}
@@ -73,6 +78,9 @@ class StopList extends React.Component {
             key={item.key}
             divider={true}
             style={{ position: 'relative', overflow: 'auto' }}
+            onClick={() => {
+              this.props.onBusStopClick(item.key);
+            }}
           >
             <div>
               <ListItemText
