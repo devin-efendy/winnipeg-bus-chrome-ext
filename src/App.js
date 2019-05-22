@@ -46,11 +46,9 @@ export default withStyles(styles)(
 
     handleSearchBarSubmit = async e => {
       e.preventDefault();
+      const { position, searchBarInput: input } = this.state;
       if (this.state.searchBarInput) {
-        TransitUtil.getStops(
-          this.state.searchBarInput,
-          this.state.position.coords
-        ).then(res => {
+        TransitUtil.getStops(position.coords, input).then(res => {
           this.setupStopsAndRoutes(res.data.stops);
         });
       }
@@ -68,10 +66,7 @@ export default withStyles(styles)(
       window.navigator.geolocation.getCurrentPosition(
         position => {
           this.setState({ position }, () => {
-            const lat = this.state.position.coords.latitude;
-            const lon = this.state.position.coords.longitude;
-
-            TransitUtil.getStopsFromPosition(lat, lon).then(response => {
+            TransitUtil.getStops(position.coords).then(response => {
               this.setupStopsAndRoutes(response.data.stops);
             }); //getStopsFromPosition
           }); // Set State

@@ -151,10 +151,19 @@ class TransitUtil {
     );
   };
 
-  static getStops = async (userInput, { latitude, longitude }) => {
-    return await openData.get(
-      `/stops:${userInput}.json?&lat=${latitude}&lon=${longitude}&distance=1500&walking=true&api-key=FO8ZSABX3wyHFEo062j`
-    );
+  static getStops = async ({ latitude, longitude }, userInput = undefined) => {
+    let query =
+      '/stops.json?distance=1500&lat=' +
+      latitude +
+      '&lon=' +
+      longitude +
+      '&walking=true&max-results=10&api-key=FO8ZSABX3wyHFEo062j';
+
+    if (userInput) {
+      query = `/stops:${userInput}.json?&lat=${latitude}&lon=${longitude}&distance=1500&walking=true&api-key=FO8ZSABX3wyHFEo062j`;
+    }
+
+    return await openData(query);
   };
 
   static getRoute = async stopNumber => {

@@ -79,7 +79,7 @@ class StopList extends React.Component {
         if (item.distances.walking) {
           walkDistance =
             Math.round(item.distances.walking).toString() + 'm away';
-        }
+        } // Check if the bus stop is still in the radius of walking distance
 
         const stopRoute = stopRoutePair;
         const data = stopRoute.find(items => items.key === item.key);
@@ -114,7 +114,9 @@ class StopList extends React.Component {
             </div>
           </ListItem>
         );
-      } else {
+      } // If all the routes for each stops are available
+      // In other words, all APi call has finished
+      else {
         return (
           <ListItem button key={item.key}>
             <ListItemText primary={item.name} />
