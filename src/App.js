@@ -46,6 +46,14 @@ export default withStyles(styles)(
 
     handleSearchBarSubmit = async e => {
       e.preventDefault();
+      if (this.state.searchBarInput) {
+        TransitUtil.getStops(
+          this.state.searchBarInput,
+          this.state.position.coords
+        ).then(res => {
+          this.setupStopsAndRoutes(res.data.stops);
+        });
+      }
     };
 
     handleBusStopClick = busStop => {

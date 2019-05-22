@@ -140,6 +140,12 @@ class TransitUtil {
     );
   };
 
+  static getStops = async (userInput, { latitude, longitude }) => {
+    return await openData.get(
+      `/stops:${userInput}.json?&lat=${latitude}&lon=${longitude}&distance=1500&walking=true&api-key=FO8ZSABX3wyHFEo062j`
+    );
+  };
+
   static getRoute = async stopNumber => {
     return await openData.get(
       `/routes.json?stop=${stopNumber}?&api-key=FO8ZSABX3wyHFEo062j`
