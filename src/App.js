@@ -103,7 +103,7 @@ export default withStyles(styles)(
     setActiveStopSchedule = async stop => {
       TransitUtil.getSchedule(stop).then(({ data }) => {
         const schedule = TransitUtil.parseSchedule(data);
-        // console.log(schedule);
+        console.log(schedule);
       });
     };
 

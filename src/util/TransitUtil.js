@@ -2,8 +2,9 @@ import openData from '../api/openData';
 
 const ARGS = {
   API: `api-key=FO8ZSABX3wyHFEo062j`,
-  walking: `walking=true`,
-  distance: `distance=1500`
+  walking: bool => `walking=${bool}`,
+  distance: dist => `distance=${dist}`,
+  maxResult: max => `max-results=${max}`
 };
 
 const getBusJSON = (info, number) => {
