@@ -1,8 +1,19 @@
 import openData from '../api/openData';
 
+const ARGS = {
+  API: `api-key=FO8ZSABX3wyHFEo062j`,
+  walking: `walking=true`,
+  distance: `distance=1500`
+};
+
 const getBusJSON = (info, number) => {
-  const arrivalTimeScheduled = info.times.arrival.scheduled;
-  const arrivalTimeEstimated = info.times.arrival.estimated;
+  let arrivalTimeScheduled = info.times.departure.scheduled;
+  let arrivalTimeEstimated = info.times.departure.estimated;
+
+  if (info.times.arrival) {
+    arrivalTimeScheduled = info.times.arrival.scheduled;
+    arrivalTimeEstimated = info.times.arrival.estimated;
+  }
 
   const name = info.variant.name;
   const destination = name.split('to ')[1];

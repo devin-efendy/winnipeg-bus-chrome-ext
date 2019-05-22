@@ -37,40 +37,53 @@ const styles = theme => ({
 });
 
 class StopList extends React.Component {
+  renderRoute = data => {
+    let routes = [];
+
+    if (data) {
+      routes = data.routes.map(el => {
+        let paperBGColor = indigo[500];
+        let paperFontColor = 'white';
+        if (el.coverage === 'rapid transit') {
+          paperBGColor = amber[500];
+          paperFontColor = 'black';
+        }
+
+        return (
+          <Paper
+            key={el.key}
+            square={true}
+            elevation={0}
+            className={this.props.classes.paperBus}
+            style={{
+              background: `${paperBGColor}`,
+              color: `${paperFontColor}`
+            }}
+          >
+            <Typography color="inherit">{el.number.toString()}</Typography>
+          </Paper>
+        );
+      });
+    } // If we have matching data
+
+    return routes;
+  };
+
   render() {
-    const { classes, stops } = this.props;
+    // Variables props for stops and their routes
+    const { classes, stops, stopRoutePair } = this.props;
 
     const RenderedItem = stops.map(item => {
-      if (stops.size === this.props.stopRoutePair.size) {
-        const walkDistance = Math.round(item.distances.walking);
-        const stopRoute = this.props.stopRoutePair;
-        const data = stopRoute.find(items => items.key === item.key);
-        let routes = [];
-        if (data) {
-          routes = data.routes.map(el => {
-            let paperBGColor = indigo[500];
-            let paperFontColor = 'white';
-            if (el.coverage === 'rapid transit') {
-              paperBGColor = amber[500];
-              paperFontColor = 'black';
-            }
-
-            return (
-              <Paper
-                key={el.key}
-                square={true}
-                elevation={0}
-                className={classes.paperBus}
-                style={{
-                  background: `${paperBGColor}`,
-                  color: `${paperFontColor}`
-                }}
-              >
-                <Typography color="inherit">{el.number.toString()}</Typography>
-              </Paper>
-            );
-          });
+      if (stops.size === stopRoutePair.size) {
+        let walkDistance = '';
+        if (item.distances.walking) {
+          walkDistance =
+            Math.round(item.distances.walking).toString() + 'm away';
         }
+
+        const stopRoute = stopRoutePair;
+        const data = stopRoute.find(items => items.key === item.key);
+        const routes = this.renderRoute(data);
 
         return (
           <ListItem
@@ -87,9 +100,7 @@ class StopList extends React.Component {
                 primaryTypographyProps={{ variant: 'subheading' }}
                 secondaryTypographyProps={{ variant: 'body1' }}
                 primary={item.name}
-                secondary={`#${item.number}${insertSpace(
-                  12
-                )}${walkDistance} m away`}
+                secondary={`#${item.number}${insertSpace(12)}${walkDistance}`}
               />
               <div
                 style={{

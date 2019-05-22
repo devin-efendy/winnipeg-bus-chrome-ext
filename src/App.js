@@ -10,9 +10,9 @@ import TransitUtil from './util/TransitUtil';
 
 const styles = theme => ({
   root: {
-    // padding: theme.spacing.unit * 4,
     width: 450,
     height: 550
+    // border: '1px solid rgb(37,37,100)'
   },
   progress: {
     margin: theme.spacing.unit * 3
@@ -108,7 +108,7 @@ export default withStyles(styles)(
     setActiveStopSchedule = async stop => {
       TransitUtil.getSchedule(stop).then(({ data }) => {
         const schedule = TransitUtil.parseSchedule(data);
-        console.log(schedule);
+        // console.log(schedule);
       });
     };
 
@@ -139,7 +139,7 @@ export default withStyles(styles)(
       const RenderMain = conditionalRender();
 
       return (
-        <Paper className={classes.root}>
+        <Paper className={classes.root} square elevation={10}>
           <SearchBar
             inputValue={searchBarInput}
             onChangeHandler={this.handleSearchBarChange}
