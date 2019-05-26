@@ -144,11 +144,9 @@ const getArrivalStatus = (scheduled, estimated) => {
 class TransitUtil {
   static getStopsFromPosition = async (latitude, longitude) => {
     return await openData.get(
-      '/stops.json?distance=1500&lat=' +
-        latitude +
-        '&lon=' +
-        longitude +
-        '&walking=true&max-results=10&api-key=FO8ZSABX3wyHFEo062j'
+      `/stops.json?distance=1500&lat=${latitude}&lon=${longitude}&${ARGS.walking(
+        true
+      )}&${ARGS.distance(1500)}&${ARGS.API}`
     );
   };
 
