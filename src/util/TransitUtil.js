@@ -144,22 +144,22 @@ const getArrivalStatus = (scheduled, estimated) => {
 class TransitUtil {
   static getStopsFromPosition = async (latitude, longitude) => {
     return await openData.get(
-      `/stops.json?distance=1500&lat=${latitude}&lon=${longitude}&${ARGS.walking(
+      `/stops.json?lat=${latitude}&lon=${longitude}&${ARGS.walking(
         true
-      )}&${ARGS.distance(1500)}&${ARGS.API}`
+      )}&${ARGS.distance(500)}&${ARGS.API}`
     );
   };
 
   static getStops = async ({ latitude, longitude }, userInput = undefined) => {
     let query =
-      '/stops.json?distance=1500&lat=' +
+      '/stops.json?distance=1000&lat=' +
       latitude +
       '&lon=' +
       longitude +
       '&walking=true&max-results=10&api-key=FO8ZSABX3wyHFEo062j';
 
     if (userInput) {
-      query = `/stops:${userInput}.json?&lat=${latitude}&lon=${longitude}&distance=1500&walking=true&api-key=FO8ZSABX3wyHFEo062j`;
+      query = `/stops:${userInput}.json?&lat=${latitude}&lon=${longitude}&distance=1000&walking=true&api-key=FO8ZSABX3wyHFEo062j`;
     }
 
     return await openData(query);
