@@ -75,14 +75,12 @@ class StopList extends React.Component {
 
     const RenderedItem = stops.map(item => {
       if (stopRoutePair) {
-        let walkDistance = '';
-        if (item.distances.walking) {
-          walkDistance =
-            Math.round(item.distances.walking).toString() + 'm away';
+        let distance = '';
+        if (item.distances.direct) {
+          distance = Math.round(item.distances.direct).toString() + 'm away';
         } // Check if the bus stop is still in the radius of walking distance
 
         const data = stopRoutePair.find(pair => pair.key === item.key);
-        console.log(data);
         const routes = this.renderRoute(data);
 
         return (
@@ -100,7 +98,7 @@ class StopList extends React.Component {
                 primaryTypographyProps={{ variant: 'subheading' }}
                 secondaryTypographyProps={{ variant: 'body1' }}
                 primary={item.name}
-                secondary={`#${item.number}${insertSpace(12)}${walkDistance}`}
+                secondary={`#${item.number}${insertSpace(12)}${distance}`}
               />
               <div
                 style={{
