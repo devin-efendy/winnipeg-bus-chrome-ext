@@ -5,7 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import SearchBar from './components/SearchBar';
 import StopList from './components/StopList';
-import BusList from './components/BusList';
+// import BusList from './components/BusList';
 
 import TransitUtil from './util/TransitUtil';
 
@@ -54,13 +54,24 @@ export default withStyles(styles)(
       const { position, searchBarInput: input } = this.state;
       if (this.state.searchBarInput) {
         TransitUtil.getStops(position.coords, input).then(res => {
-          this.setupStopsAndRoutes(res.data.stops);
+          this.setState({ onStopListPage: false }, () => {
+            this.setupStopsAndRoutes(res.data.stops);
+          });
         });
       }
     };
 
     handleBusStopClick = busStop => {
       this.setActiveStopSchedule(busStop);
+    };
+
+    handleRefreshClick = () => {};
+
+    handleUseLocation = e => {
+      e.preventDefault();
+      this.setState({ onStopListPage: false }, () => {
+        this.setStopViaUserPosition();
+      });
     };
 
     componentDidMount() {
@@ -148,6 +159,7 @@ export default withStyles(styles)(
           <SearchBar
             inputValue={searchBarInput}
             onChangeHandler={this.handleSearchBarChange}
+            onUseLocationHandler={this.handleUseLocation}
             onSubmitHandler={this.handleSearchBarSubmit}
           />
 

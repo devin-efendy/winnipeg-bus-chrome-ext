@@ -91,7 +91,12 @@ class PrimarySearchAppBar extends React.Component {
               <IconButton color="inherit">
                 <Refresh />
               </IconButton>
-              <IconButton color="inherit">
+              <IconButton
+                color="inherit"
+                onClick={e => {
+                  this.props.onUseLocationHandler(e);
+                }}
+              >
                 <MyLocation />
               </IconButton>
             </div>
