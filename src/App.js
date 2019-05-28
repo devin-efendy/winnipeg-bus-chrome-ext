@@ -38,7 +38,9 @@ export default withStyles(styles)(
       allStopsRoute: [],
       stopsList: [],
       position: null,
-      searchBarInput: ''
+      searchBarInput: '',
+      onStopListPage: false,
+      onBusListPage: false
     };
 
     handleSearchBarChange = ({ name, value }) => {
@@ -103,7 +105,7 @@ export default withStyles(styles)(
         const lastKey = stopsList[stopsList.length - 1].key;
         allStopsRoute.push({ key: lastKey, routes: res.data.routes });
 
-        this.setState({ stopsList, allStopsRoute });
+        this.setState({ stopsList, allStopsRoute, onStopListPage: true });
       });
     };
 
@@ -120,11 +122,7 @@ export default withStyles(styles)(
 
       const conditionalRender = () => {
         // return <BusList busRoutes={this.state}/>;
-        if (
-          this.state.position &&
-          this.state.stopsList &&
-          this.state.allStopsRoute
-        ) {
+        if (this.state.onStopListPage) {
           return (
             <StopList
               onBusStopClick={this.handleBusStopClick}
