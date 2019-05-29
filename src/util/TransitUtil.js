@@ -181,6 +181,7 @@ class TransitUtil {
 
       scheduledStops.forEach(routeSchedule => {
         const busInfo = getBusJSON(routeSchedule, number);
+        busInfo.coverage = item.route.coverage;
         scheduleList.push(busInfo);
       });
     });

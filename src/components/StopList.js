@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { amber, indigo } from '@material-ui/core/colors';
+import { amber, blue, blueGrey } from '@material-ui/core/colors';
 import {
   List,
   ListItem,
@@ -42,17 +42,19 @@ class StopList extends React.Component {
 
     if (data) {
       routes = data.routes.map(el => {
-        let paperBGColor = indigo[500];
+        let paperBGColor = blueGrey[700];
         let paperFontColor = 'white';
         if (el.coverage === 'rapid transit') {
-          paperBGColor = amber[500];
+          paperBGColor = blue[700];
+        } else if (el.coverage === 'super express') {
+          paperBGColor = amber[400];
           paperFontColor = 'black';
         }
 
         return (
           <Paper
             key={el.key}
-            square={true}
+            square={false}
             elevation={0}
             className={this.props.classes.paperBus}
             style={{

@@ -147,6 +147,7 @@ export default withStyles(styles)(
 
     setActiveStopSchedule = stop => {
       TransitUtil.getSchedule(stop).then(({ data }) => {
+        console.log(data);
         const schedule = TransitUtil.parseSchedule(data);
         this.setState({ onBusListPage: true, activeStopSchedule: schedule });
       });
