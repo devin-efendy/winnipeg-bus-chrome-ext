@@ -23,7 +23,7 @@ const styles = theme => ({
     width: '100%',
     position: 'relative',
     overflow: 'auto',
-    height: '484px'
+    height: '100%'
   },
   paperBus: {
     marginRight: '10px',

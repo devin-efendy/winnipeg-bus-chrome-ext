@@ -23,6 +23,7 @@ const getBusJSON = (info, number) => {
   const arrivalEstimated = parseTime(arrivalTimeEstimated);
   const arrivalStatus = getArrivalStatus(arrivalScheduled, arrivalEstimated);
   const busData = info.bus;
+  const key = info.key;
 
   let wifi = false;
   if (busData) {
@@ -30,6 +31,7 @@ const getBusJSON = (info, number) => {
   }
 
   return {
+    key,
     number,
     name,
     destination,

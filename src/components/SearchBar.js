@@ -38,7 +38,7 @@ const styles = theme => ({
       backgroundColor: fade(theme.palette.common.white, 0.25)
     },
     color: 'white',
-    width: '200px',
+    width: '100%',
     padding: '9px 14px'
   }
 });

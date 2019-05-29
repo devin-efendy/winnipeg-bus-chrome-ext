@@ -5,7 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import SearchBar from './components/SearchBar';
 import StopList from './components/StopList';
-// import BusList from './components/BusList';
+import BusList from './components/BusList';
 
 import TransitUtil from './util/TransitUtil';
 
@@ -13,7 +13,6 @@ const styles = theme => ({
   root: {
     width: 450,
     height: 550
-    // border: '1px solid rgb(37,37,100)'
   },
   progress: {
     margin: theme.spacing.unit * 3
@@ -36,7 +35,8 @@ export default withStyles(styles)(
       activeStop: [],
       activeStopSchedule: [],
       allStopsRoute: [],
-      stopsList: [],
+      nearbyStops: [],
+      nearbyStopsRoute: [],
       position: null,
       searchBarInput: '',
       onStopListPage: false,
@@ -54,24 +54,31 @@ export default withStyles(styles)(
       const { position, searchBarInput: input } = this.state;
       if (this.state.searchBarInput) {
         TransitUtil.getStops(position.coords, input).then(res => {
-          this.setState({ onStopListPage: false }, () => {
+          this.setState({ onStopListPage: false, onBusListPage: false }, () => {
             this.setupStopsAndRoutes(res.data.stops);
-          });
-        });
-      }
+          }); // setState
+        }); // TransitUtil.getStops
+      } // If the user input is not empty
     };
 
     handleBusStopClick = busStop => {
-      this.setActiveStopSchedule(busStop);
+      this.setState({ onStopListPage: false }, () => {
+        this.setActiveStopSchedule(busStop);
+      });
     };
 
     handleRefreshClick = () => {};
 
     handleUseLocation = e => {
       e.preventDefault();
-      this.setState({ onStopListPage: false }, () => {
-        this.setStopViaUserPosition();
-      });
+      if (this.state.nearbyStops.length > 0) {
+        this.setState({
+          onStopListPage: true,
+          onBusListPage: false,
+          activeStop: this.state.nearbyStops,
+          allStopsRoute: this.state.nearbyStopsRoute
+        });
+      }
     };
 
     componentDidMount() {
@@ -82,8 +89,10 @@ export default withStyles(styles)(
       window.navigator.geolocation.getCurrentPosition(
         position => {
           this.setState({ position }, () => {
-            TransitUtil.getStops(position.coords).then(response => {
-              this.setupStopsAndRoutes(response.data.stops);
+            const testData = { latitude: 49.81231, longitude: -97.1563673 };
+            // original data is position.coords
+            TransitUtil.getStops(testData).then(response => {
+              this.setupStopsAndRoutes(response.data.stops, true);
             }); //getStopsFromPosition
           }); // Set State
         },
@@ -93,7 +102,7 @@ export default withStyles(styles)(
       ); // Geolocation call
     }; // setStopViaUserPosition
 
-    setupStopsAndRoutes = stopsList => {
+    setupStopsAndRoutes = (stopsList, useLocation = false) => {
       let allStopsRoute = [];
 
       const runPromises = () => {
@@ -116,14 +125,30 @@ export default withStyles(styles)(
         const lastKey = stopsList[stopsList.length - 1].key;
         allStopsRoute.push({ key: lastKey, routes: res.data.routes });
 
-        this.setState({ stopsList, allStopsRoute, onStopListPage: true });
+        if (useLocation) {
+          this.setState({
+            nearbyStops: stopsList,
+            nearbyStopsRoute: allStopsRoute,
+            activeStop: stopsList,
+            allStopsRoute,
+            onStopListPage: true,
+            onBusListPage: false
+          });
+        } else {
+          this.setState({
+            activeStop: stopsList,
+            allStopsRoute,
+            onStopListPage: true,
+            onBusListPage: false
+          });
+        }
       });
     };
 
-    setActiveStopSchedule = async stop => {
+    setActiveStopSchedule = stop => {
       TransitUtil.getSchedule(stop).then(({ data }) => {
         const schedule = TransitUtil.parseSchedule(data);
-        console.log(schedule);
+        this.setState({ onBusListPage: true, activeStopSchedule: schedule });
       });
     };
 
@@ -132,16 +157,17 @@ export default withStyles(styles)(
       const { classes } = this.props;
 
       const conditionalRender = () => {
-        // return <BusList busRoutes={this.state}/>;
-        if (this.state.onStopListPage) {
+        if (this.state.onStopListPage && !this.state.onBusListPage) {
           return (
             <StopList
               onBusStopClick={this.handleBusStopClick}
-              stops={this.state.stopsList}
+              stops={this.state.activeStop}
               stopRoutePair={this.state.allStopsRoute}
               getSchedule={this.getStopSchedule}
             />
           );
+        } else if (this.state.onBusListPage && !this.state.onStopListPage) {
+          return <BusList schedule={this.state.activeStopSchedule} />;
         } else {
           return (
             <div className={classes.loadingPage}>
