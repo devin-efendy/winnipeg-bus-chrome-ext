@@ -34,37 +34,72 @@ const styles = theme => ({
 });
 
 class BusList extends React.Component {
-  calcArrival = time => {
-    let arrivalTime = -1;
+  renderTime = item => {
+    let arrivalTime, scheduled, estimated, renderedTime;
+    const currentTime = new Date();
 
-    const sh = time.arrivalScheduled.hour;
-    const sm = time.arrivalScheduled.minute;
-    const eh = time.arrivalEstimated.hour;
-    const em = time.arrivalEstimated.minute;
+    /** Variable Abbreviation
+     * ch: current hour of user's time
+     * cm: current minute of user's minute
+     * eh: estimated hour of bus's arrival
+     * em: estimated minute of bus's arrival
+     */
+    const ch = currentTime.getHours();
+    const cm = currentTime.getMinutes();
+    const eh = item.arrivalEstimated.hour;
+    const em = item.arrivalEstimated.minute;
+    const hrSTR = eh.toString();
+    const minSTR = em.toString();
+    const hr = hrSTR.padStart(2, '0');
+    const min = minSTR.padStart(2, '0');
+    const resultTime = `${hr}:${min}`;
 
-    // TODO: Calculate the time the user have to wait for the bus
-    let scheduled, estimated;
-
-    if (Math.abs(sh - 23) > Math.abs(eh - 12)) {
-      scheduled = Math.abs(sh - 12) * 60 - Math.abs(sm - 60);
-      estimated = Math.abs(eh - 12) * 60 - Math.abs(em - 60);
+    if (Math.abs(ch - 12) > Math.abs(eh - 12)) {
+      scheduled = Math.abs(ch - 12) * 60 + Math.abs(cm - 60);
+      estimated = Math.abs(eh - 12) * 60 + Math.abs(em - 60);
     } else {
-      scheduled = Math.abs(sh - 12) * 60 - Math.abs(sm - 60);
-      estimated = Math.abs(eh - 12) * 60 - Math.abs(em - 60);
+      scheduled = Math.abs(ch - 12) * 60 + Math.abs(cm);
+      estimated = Math.abs(eh - 12) * 60 + Math.abs(em);
     }
 
     arrivalTime = Math.abs(estimated - scheduled);
 
-    return arrivalTime;
+    if (arrivalTime > 30) {
+      renderedTime = (
+        <ListItemText
+          primaryTypographyProps={{
+            variant: 'subheading',
+            style: { display: 'flex', justifyContent: 'flex-end' }
+          }}
+          primary={resultTime}
+        />
+      );
+    } else if (arrivalTime <= 30) {
+      arrivalTime = arrivalTime.toString().padStart(2, '0') + ' min';
+      renderedTime = (
+        <ListItemText
+          primaryTypographyProps={{
+            variant: 'subheading',
+            style: { display: 'flex', justifyContent: 'flex-end' }
+          }}
+          secondaryTypographyProps={{
+            variant: 'body1',
+            style: { display: 'flex', justifyContent: 'flex-end' }
+          }}
+          primary={arrivalTime}
+          secondary={resultTime}
+        />
+      );
+    }
+
+    return renderedTime;
   };
 
   renderBusses = schedule => {
     const scheduleList = schedule.map(item => {
       // Format arrival hour and minute e.g. pad with zeros
-      const hrSTR = item.arrivalEstimated.hour.toString();
-      const hr = hrSTR.padStart(2, '0');
-      const minSTR = item.arrivalEstimated.minute.toString();
-      const min = minSTR.padStart(2, '0');
+      let time = this.renderTime(item);
+
       // Choose the background and font color for each bus coverage
       let busNumBG = blueGrey[700];
       let busNumFontColor = 'white';
@@ -75,8 +110,22 @@ class BusList extends React.Component {
         busNumFontColor = 'black';
       }
 
+      const renderStatus = () => {
+        let renderedStatus = null;
+
+        let status = 'OK';
+        if (item.arrivalStatus === 'late') {
+          status = 'L';
+        } else if (item.arrivalStatus === 'early') {
+          status = 'E';
+        }
+
+        return status;
+      };
+
       return (
         <ListItem
+          button
           key={item.key}
           divider={true}
           style={{ position: 'relative', overflow: 'auto' }}
@@ -93,7 +142,6 @@ class BusList extends React.Component {
                   variant="subtitle1"
                   style={{ color: busNumFontColor }}
                 >
-                  {' '}
                   {item.number}
                 </Typography>
               </Paper>
@@ -107,7 +155,10 @@ class BusList extends React.Component {
               className={this.props.classes.gridItem}
               style={{ justifyContent: 'center' }}
             >
-              <Typography variant="subtitle1"> {`${hr}:${min}`}</Typography>
+              {time}
+              <Paper elevation={0} className={this.props.classes.busNumber}>
+                {renderStatus()}
+              </Paper>
             </Grid>
           </Grid>
         </ListItem>

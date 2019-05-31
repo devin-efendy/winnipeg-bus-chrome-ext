@@ -91,13 +91,13 @@ const compareTime = (timeA, timeB, calcSec = true) => {
   let result = 1;
 
   // This is to compare the date: year > month > day
-  if (yearA > yearB) {
+  if (yearA < yearB) {
     result = -1;
   } else if (yearA === yearB) {
-    if (monthA > monthB) {
+    if (monthA < monthB) {
       result = -1;
     } else if (monthA === monthB) {
-      if (dayA > dayB) {
+      if (dayA < dayB) {
         result = -1;
       } else if (dayA === dayB) {
         result = 0;

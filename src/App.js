@@ -89,9 +89,9 @@ export default withStyles(styles)(
       window.navigator.geolocation.getCurrentPosition(
         position => {
           this.setState({ position }, () => {
-            const testData = { latitude: 49.81231, longitude: -97.1563673 };
+            // const testData = { latitude: 49.81231, longitude: -97.1563673 };
             // original data is position.coords
-            TransitUtil.getStops(testData).then(response => {
+            TransitUtil.getStops(position.coords).then(response => {
               this.setupStopsAndRoutes(response.data.stops, true);
             }); //getStopsFromPosition
           }); // Set State
