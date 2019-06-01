@@ -26,11 +26,11 @@ const styles = theme => ({
     },
     marginRight: theme.spacing.unit * 2,
     marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit * 1,
-      width: 'auto'
-    }
+    width: 'auto%'
+    // [theme.breakpoints.up('sm')]: {
+    //   marginLeft: theme.spacing.unit * 1,
+    //   width: 'auto'
+    // }
   },
   searchIcon: {
     width: theme.spacing.unit * 5,
@@ -48,10 +48,7 @@ const styles = theme => ({
     padding: theme.spacing.unit * 1,
     paddingLeft: theme.spacing.unit * 5,
     transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: 100
-    }
+    width: '100%'
   }
 });
 

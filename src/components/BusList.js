@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { blueGrey, amber, blue } from '@material-ui/core/colors';
+import { blueGrey, amber, blue, green, red } from '@material-ui/core/colors';
 
 const styles = theme => ({
   root: {
@@ -25,8 +25,8 @@ const styles = theme => ({
   },
   busNumber: {
     padding: '3px',
-    width: '35px',
-    height: '35px',
+    width: '30px',
+    height: '30px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
@@ -64,7 +64,7 @@ class BusList extends React.Component {
 
     arrivalTime = Math.abs(estimated - scheduled);
 
-    if (arrivalTime > 30) {
+    if (arrivalTime > 30 || (ch === 23 && eh === 1)) {
       renderedTime = (
         <ListItemText
           primaryTypographyProps={{
@@ -112,16 +112,31 @@ class BusList extends React.Component {
 
       const renderStatus = () => {
         let renderedStatus = null;
-
+        let statusColor = blue[500];
         let status = 'OK';
         if (item.arrivalStatus === 'late') {
           status = 'L';
+          statusColor = red[500];
         } else if (item.arrivalStatus === 'early') {
           status = 'E';
+          statusColor = green['A400'];
         }
 
-        return status;
+        renderedStatus = (
+          <Paper
+            elevation={0}
+            className={this.props.classes.busNumber}
+            style={{ backgroundColor: statusColor }}
+          >
+            <Typography variant="caption" style={{ color: 'white' }}>
+              {status}
+            </Typography>
+          </Paper>
+        );
+        return renderedStatus;
       };
+
+      const status = renderStatus();
 
       return (
         <ListItem
@@ -138,10 +153,7 @@ class BusList extends React.Component {
                 className={this.props.classes.busNumber}
                 style={{ background: busNumBG }}
               >
-                <Typography
-                  variant="subtitle1"
-                  style={{ color: busNumFontColor }}
-                >
+                <Typography variant="body1" style={{ color: busNumFontColor }}>
                   {item.number}
                 </Typography>
               </Paper>
@@ -156,9 +168,7 @@ class BusList extends React.Component {
               style={{ justifyContent: 'center' }}
             >
               {time}
-              <Paper elevation={0} className={this.props.classes.busNumber}>
-                {renderStatus()}
-              </Paper>
+              {status}
             </Grid>
           </Grid>
         </ListItem>
