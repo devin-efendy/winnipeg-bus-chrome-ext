@@ -64,7 +64,7 @@ class BusList extends React.Component {
 
     arrivalTime = Math.abs(estimated - scheduled);
 
-    if (arrivalTime > 30 || (ch === 23 && eh === 1)) {
+    if (Math.abs(ch - 12) === Math.abs(eh - 12) || arrivalTime > 30) {
       renderedTime = (
         <ListItemText
           primaryTypographyProps={{
