@@ -46,7 +46,7 @@ const styles = theme => ({
   }
 });
 
-class BusList extends React.Component {
+class BusList extends Component {
   renderTime = item => {
     let arrivalTime, scheduled, estimated, renderedTime;
     const currentTime = new Date();

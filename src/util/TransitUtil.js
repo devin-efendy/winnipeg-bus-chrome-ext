@@ -7,14 +7,22 @@ const ARGS = {
   maxResult: max => `max-results=${max}`
 };
 
+/**
+ * To process bus JSON from API call to a custom JSON object that contain all necessary data
+ * @param {Object} info RAW bus information as JSON Object
+ * @param {number} number bus number
+ */
 const getBusJSON = (info, number) => {
   let arrivalTimeScheduled = info.times.departure.scheduled;
   let arrivalTimeEstimated = info.times.departure.estimated;
+  let wifi = false;
 
+  // To check if the bus info has the arrival times for the bus
+  // Otherwise use departure time
   if (info.times.arrival) {
     arrivalTimeScheduled = info.times.arrival.scheduled;
     arrivalTimeEstimated = info.times.arrival.estimated;
-  }
+  } // if
 
   const name = info.variant.name;
   const destination = name.split('to ')[1];
@@ -25,10 +33,9 @@ const getBusJSON = (info, number) => {
   const busData = info.bus;
   const key = info.key;
 
-  let wifi = false;
   if (busData) {
     wifi = busData.wifi;
-  }
+  } // if
 
   return {
     key,
@@ -40,8 +47,8 @@ const getBusJSON = (info, number) => {
     wifi,
     arrivalScheduled,
     arrivalEstimated
-  };
-};
+  }; // return
+}; // getBusJSON
 
 /**
  * To parse an input time as string to an object containing the data of the time

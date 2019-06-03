@@ -94,6 +94,7 @@ class SearchBar extends React.Component {
                 onClick={e => {
                   this.props.onRefresh(e);
                 }}
+                // disabled
               >
                 <Refresh />
               </IconButton>

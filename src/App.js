@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Paper, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { blueGrey, grey } from '@material-ui/core/colors';
 
 import SearchBar from './components/SearchBar';
 import StopList from './components/StopList';
