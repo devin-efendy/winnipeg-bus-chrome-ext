@@ -9,14 +9,27 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { blueGrey, amber, blue, green, red } from '@material-ui/core/colors';
+import {
+  blueGrey,
+  amber,
+  blue,
+  green,
+  red,
+  grey
+} from '@material-ui/core/colors';
 
 const styles = theme => ({
   root: {
     width: '100%',
+    // position: 'relative',
+    // overflow: 'auto',
+    height: '486px'
+  },
+  busList: {
     position: 'relative',
     overflow: 'auto',
-    height: '484px'
+    height: '91%',
+    padding: 0
   },
   gridItem: {
     display: 'flex',
@@ -64,7 +77,10 @@ class BusList extends React.Component {
 
     arrivalTime = Math.abs(estimated - scheduled);
 
-    if (Math.abs(ch - 12) === Math.abs(eh - 12) || arrivalTime > 30) {
+    if (
+      (Math.abs(ch - 12) === Math.abs(eh - 12) && ch !== eh) ||
+      arrivalTime > 30
+    ) {
       renderedTime = (
         <ListItemText
           primaryTypographyProps={{
@@ -179,12 +195,29 @@ class BusList extends React.Component {
   };
 
   render() {
-    const { classes, schedule } = this.props;
-    console.log(schedule);
+    const { classes, schedule, busStop } = this.props;
+
     const stopSchedule = this.renderBusses(schedule);
     return (
       <div className={classes.root}>
-        <List>{stopSchedule}</List>
+        <Paper
+          square={true}
+          style={{
+            padding: '2%',
+            backgroundColor: grey[800],
+            height: '5%'
+          }}
+          elevation={2}
+        >
+          <Typography
+            variant="subtitle1"
+            style={{ color: grey[300] }}
+            align="center"
+          >
+            {busStop.name}
+          </Typography>
+        </Paper>
+        <List className={classes.busList}>{stopSchedule}</List>
       </div>
     );
   }

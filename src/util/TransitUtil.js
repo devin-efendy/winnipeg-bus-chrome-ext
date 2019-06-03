@@ -167,7 +167,7 @@ class TransitUtil {
 
   static getSchedule = async stopNumber => {
     return await openData.get(
-      `/stops/${stopNumber}/schedule.json??&api-key=FO8ZSABX3wyHFEo062j`
+      `/stops/${stopNumber}/schedule.json?&api-key=FO8ZSABX3wyHFEo062j`
     );
   };
 

@@ -89,7 +89,12 @@ class SearchBar extends React.Component {
               >
                 <Send />
               </IconButton>
-              <IconButton color="inherit">
+              <IconButton
+                color="inherit"
+                onClick={e => {
+                  this.props.onRefresh(e);
+                }}
+              >
                 <Refresh />
               </IconButton>
               <IconButton

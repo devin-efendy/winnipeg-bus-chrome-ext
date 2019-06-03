@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Paper, Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { blueGrey, grey } from '@material-ui/core/colors';
 
 import SearchBar from './components/SearchBar';
 import StopList from './components/StopList';
@@ -27,7 +28,7 @@ const styles = theme => ({
   }
 });
 
-// TODO: Create a flag that indicates a list has been rendered
+// TODO: selectedBusStop: {name: blablabla, number: ######}
 
 export default withStyles(styles)(
   class App extends Component {
@@ -37,6 +38,7 @@ export default withStyles(styles)(
       allStopsRoute: [],
       nearbyStops: [],
       nearbyStopsRoute: [],
+      selectedBusStop: { name: '', number: -1 },
       position: null,
       searchBarInput: '',
       onStopListPage: false,
@@ -53,11 +55,18 @@ export default withStyles(styles)(
       e.preventDefault();
       const { position, searchBarInput: input } = this.state;
       if (this.state.searchBarInput) {
-        TransitUtil.getStops(position.coords, input).then(res => {
-          this.setState({ onStopListPage: false, onBusListPage: false }, () => {
-            this.setupStopsAndRoutes(res.data.stops);
-          }); // setState
-        }); // TransitUtil.getStops
+        this.setState(
+          {
+            onStopListPage: false,
+            onBusListPage: false,
+            selectedBusStop: { name: '', number: -1 }
+          },
+          () => {
+            TransitUtil.getStops(position.coords, input).then(res => {
+              this.setupStopsAndRoutes(res.data.stops);
+            });
+          }
+        );
       } // If the user input is not empty
     };
 
@@ -67,7 +76,15 @@ export default withStyles(styles)(
       });
     };
 
-    handleRefreshClick = () => {};
+    handleRefreshClick = e => {
+      e.preventDefault();
+
+      if (this.state.onBusListPage && this.state.selectedBusStop !== -1) {
+        this.setState({ onBusListPage: false }, () => {
+          this.setActiveStopSchedule(this.state.selectedBusStop.number);
+        });
+      }
+    };
 
     handleUseLocation = e => {
       e.preventDefault();
@@ -76,7 +93,8 @@ export default withStyles(styles)(
           onStopListPage: true,
           onBusListPage: false,
           activeStop: this.state.nearbyStops,
-          allStopsRoute: this.state.nearbyStopsRoute
+          allStopsRoute: this.state.nearbyStopsRoute,
+          selectedBusStop: { name: '', number: -1 }
         });
       }
     };
@@ -147,9 +165,19 @@ export default withStyles(styles)(
 
     setActiveStopSchedule = stop => {
       TransitUtil.getSchedule(stop).then(({ data }) => {
-        console.log(data);
         const schedule = TransitUtil.parseSchedule(data);
-        this.setState({ onBusListPage: true, activeStopSchedule: schedule });
+        const busStop = this.state.activeStop.find(item => {
+          return item.key === stop;
+        });
+
+        this.setState({
+          onBusListPage: true,
+          activeStopSchedule: schedule,
+          selectedBusStop: {
+            name: busStop.name,
+            number: busStop.number
+          }
+        });
       });
     };
 
@@ -168,7 +196,12 @@ export default withStyles(styles)(
             />
           );
         } else if (this.state.onBusListPage && !this.state.onStopListPage) {
-          return <BusList schedule={this.state.activeStopSchedule} />;
+          return (
+            <BusList
+              schedule={this.state.activeStopSchedule}
+              busStop={this.state.selectedBusStop}
+            />
+          );
         } else {
           return (
             <div className={classes.loadingPage}>
@@ -185,6 +218,7 @@ export default withStyles(styles)(
         <Paper className={classes.root} square elevation={10}>
           <SearchBar
             inputValue={searchBarInput}
+            onRefresh={this.handleRefreshClick}
             onChangeHandler={this.handleSearchBarChange}
             onUseLocationHandler={this.handleUseLocation}
             onSubmitHandler={this.handleSearchBarSubmit}
