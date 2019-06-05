@@ -151,7 +151,17 @@ const getArrivalStatus = (scheduled, estimated) => {
 };
 
 class TransitUtil {
+  /** static, async function
+   * This static function is to perform an API call to look for nearby stops near the user
+   * or to look for stops that are related/similar to the user's search input.
+   * This function will return a promise.
+   * @param {Object} latitude_longitude lat and long pair
+   * @param {String} userInput user search input, defaulted to undefined
+   * @return A promise that use Open Data Web Services API call to search for the stops
+   */
   static getStops = async ({ latitude, longitude }, userInput = undefined) => {
+    // query will be defaulted to API call query that search for nearby stops
+    // if the user does not provide any search input
     let query =
       '/stops.json?distance=500&lat=' +
       latitude +
@@ -159,12 +169,14 @@ class TransitUtil {
       longitude +
       '&api-key=FO8ZSABX3wyHFEo062j';
 
+    // If the user DOES provide a search input, then we use different API call
     if (userInput) {
       query = `/stops:${userInput}.json?&lat=${latitude}&lon=${longitude}&distance=500&api-key=FO8ZSABX3wyHFEo062j`;
-    }
+    } //if
 
+    // return the promise
     return await openData(query);
-  };
+  }; // getStops
 
   static getRoute = async stopNumber => {
     return await openData.get(
