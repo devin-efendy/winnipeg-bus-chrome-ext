@@ -178,11 +178,17 @@ class TransitUtil {
     return await openData(query);
   }; // getStops
 
+  /** static, async function
+   * use API call to get the routes for a particular stops.
+   * @param {Number} stopNumber the number of the stop that we will use to search for the routes
+   * @return A promise that use Open Data Web Services API call to search for the routes
+   *         of a particular stop with number stopNumber
+   */
   static getRoute = async stopNumber => {
     return await openData.get(
       `/routes.json?stop=${stopNumber}?&api-key=FO8ZSABX3wyHFEo062j`
-    );
-  };
+    ); // return
+  }; // getRoute
 
   static getSchedule = async stopNumber => {
     return await openData.get(
