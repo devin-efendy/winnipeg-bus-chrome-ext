@@ -27,8 +27,6 @@ const styles = theme => ({
   }
 });
 
-// TODO: selectedBusStop: {name: blablabla, number: ######}
-
 export default withStyles(styles)(
   class App extends Component {
     state = {
@@ -44,11 +42,16 @@ export default withStyles(styles)(
       onBusListPage: false
     };
 
+    /** handleSearchBarChange
+     * @summary handle changes on user input in search bar
+     * @param {String} name name of component that changed (searchBarInput)
+     * @param {String} value current value of the search bar
+     */
     handleSearchBarChange = ({ name, value }) => {
       this.setState({
         [name]: value
-      });
-    };
+      }); // setState
+    }; // end - handleSearchBarChange
 
     handleSearchBarSubmit = async e => {
       e.preventDefault();
