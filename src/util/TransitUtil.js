@@ -25,9 +25,16 @@ const getBusJSON = (info, number) => {
     arrivalTimeScheduled = info.times.arrival.scheduled;
     arrivalTimeEstimated = info.times.arrival.estimated;
   } // if
-
   const name = info.variant.name;
-  const destination = name.split('to ')[1];
+  let destination = '';
+  if (name) {
+    const nameSplit = name.split('to ');
+    if (nameSplit.length === 0) {
+      destination = name;
+    } else {
+      destination = name.split('to ')[1];
+    }
+  }
   const cancelled = info.cancelled;
   const arrivalScheduled = parseTime(arrivalTimeScheduled);
   const arrivalEstimated = parseTime(arrivalTimeEstimated);

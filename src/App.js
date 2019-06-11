@@ -88,6 +88,13 @@ export default withStyles(styles)(
       }
     };
 
+    handleBackArrowClick = e => {
+      const { onBusListPage, onStopListPage } = this.state;
+      if (!onStopListPage && onBusListPage) {
+        this.setState({ onBusListPage: false, onStopListPage: true });
+      }
+    };
+
     handleUseLocation = e => {
       e.preventDefault();
       if (this.state.nearbyStops.length > 0) {
@@ -224,6 +231,8 @@ export default withStyles(styles)(
             onChangeHandler={this.handleSearchBarChange}
             onUseLocationHandler={this.handleUseLocation}
             onSubmitHandler={this.handleSearchBarSubmit}
+            onBackHandler={this.handleBackArrowClick}
+            onSchedulePage={this.state.onBusListPage}
           />
 
           <div style={{ width: '100%', height: '486px' }}>{RenderMain}</div>

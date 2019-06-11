@@ -56,13 +56,38 @@ class SearchBar extends React.Component {
   render() {
     const { classes } = this.props;
 
+    const renderBackArrow = () => {
+      if (this.props.onSchedulePage) {
+        return (
+          <IconButton
+            color="inherit"
+            onClick={e => {
+              this.props.onBackHandler(e);
+            }}
+          >
+            <ArrowBackIosSharp />
+          </IconButton>
+        );
+      } else {
+        return (
+          <IconButton
+            color="inherit"
+            onClick={e => {
+              this.props.onBackHandler(e);
+            }}
+            disabled
+          >
+            <ArrowBackIosSharp />
+          </IconButton>
+        );
+      }
+    };
+
     return (
       <div className={classes.grow}>
         <AppBar position="static">
           <Toolbar style={{ padding: '0 2px', backgroundColor: blue[500] }}>
-            <IconButton color="inherit">
-              <ArrowBackIosSharp />
-            </IconButton>
+            {renderBackArrow()}
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
