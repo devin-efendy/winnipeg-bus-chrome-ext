@@ -96,6 +96,7 @@ class SearchBar extends React.Component {
                 onChange={({ target: { name, value } }) => {
                   this.props.onChangeHandler({ name, value });
                 }}
+                value={this.props.inputValue}
                 name="searchBarInput"
                 placeholder="Search…"
                 classes={{

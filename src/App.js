@@ -61,9 +61,11 @@ export default withStyles(styles)(
           {
             onStopListPage: false,
             onBusListPage: false,
-            selectedBusStop: { name: '', number: -1 }
+            selectedBusStop: { name: '', number: -1 },
+            searchBarInput: ''
           },
           () => {
+            console.log(this.state);
             TransitUtil.getStops(position.coords, input).then(res => {
               this.setupStopsAndRoutes(res.data.stops);
             });
