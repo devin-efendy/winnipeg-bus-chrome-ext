@@ -53,9 +53,15 @@ export default withStyles(styles)(
       }); // setState
     }; // end - handleSearchBarChange
 
+    /** handleSearchBarSubmit
+     * @async
+     * @summary to handle the event when the user submit a search input.
+     *          this will setup a new route for the searches that user submit
+     * @param {Event} e event when the submit button clicked
+     */
     handleSearchBarSubmit = async e => {
       e.preventDefault();
-      const { position, searchBarInput: input } = this.state;
+      const { position, searchBarInput: input } = this.state; // destructure
       if (this.state.searchBarInput) {
         this.setState(
           {
@@ -63,16 +69,16 @@ export default withStyles(styles)(
             onBusListPage: false,
             selectedBusStop: { name: '', number: -1 },
             searchBarInput: ''
-          },
+          }, // setState
           () => {
             console.log(this.state);
             TransitUtil.getStops(position.coords, input).then(res => {
               this.setupStopsAndRoutes(res.data.stops);
-            });
-          }
+            }); // getStops
+          } // end - callback
         );
       } // If the user input is not empty
-    };
+    }; // end - handleSearchBarSubmit
 
     handleBusStopClick = busStop => {
       this.setState({ onStopListPage: false }, () => {
