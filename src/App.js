@@ -106,13 +106,16 @@ export default withStyles(styles)(
     handleUseLocation = e => {
       e.preventDefault();
       if (this.state.nearbyStops.length > 0) {
-        this.setState({
-          onStopListPage: true,
-          onBusListPage: false,
-          activeStop: this.state.nearbyStops,
-          allStopsRoute: this.state.nearbyStopsRoute,
-          selectedBusStop: { name: '', number: -1 }
-        });
+        this.setState(
+          {
+            onStopListPage: false,
+            onBusListPage: false,
+            selectedBusStop: { name: '', number: -1 }
+          },
+          () => {
+            this.setStopViaUserPosition();
+          }
+        );
       }
     };
 
@@ -121,20 +124,23 @@ export default withStyles(styles)(
     }
 
     setStopViaUserPosition = () => {
-      window.navigator.geolocation.getCurrentPosition(
-        position => {
-          this.setState({ position }, () => {
-            // const testData = { latitude: 49.81231, longitude: -97.1563673 };
-            // original data is position.coords
-            TransitUtil.getStops(position.coords).then(response => {
-              this.setupStopsAndRoutes(response.data.stops, true);
-            }); //getStopsFromPosition
-          }); // Set State
-        },
-        err => {
-          console.log(err.message);
-        } // Geolocation error
-      ); // Geolocation call
+      const testData = { latitude: 49.81231, longitude: -97.1563673 };
+      TransitUtil.getStops(testData).then(response => {
+        this.setupStopsAndRoutes(response.data.stops, true);
+      });
+
+      // window.navigator.geolocation.getCurrentPosition(
+      //   position => {
+      //     this.setState({ position }, () => {
+      //       TransitUtil.getStops(position.coords).then(response => {
+      //         this.setupStopsAndRoutes(response.data.stops, true);
+      //       }); //getStopsFromPosition
+      //     }); // Set State
+      //   },
+      //   err => {
+      //     console.log(err.message);
+      //   } // Geolocation error
+      // ); // Geolocation call
     }; // setStopViaUserPosition
 
     setupStopsAndRoutes = (stopsList, useLocation = false) => {

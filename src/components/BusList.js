@@ -21,8 +21,6 @@ import {
 const styles = theme => ({
   root: {
     width: '100%',
-    // position: 'relative',
-    // overflow: 'auto',
     height: '486px'
   },
   busList: {
@@ -34,7 +32,6 @@ const styles = theme => ({
   gridItem: {
     display: 'flex',
     alignItems: 'center'
-    // marginRight: '10px'
   },
   busNumber: {
     padding: '3px',
@@ -204,17 +201,34 @@ class BusList extends Component {
           square={true}
           style={{
             padding: '2%',
-            backgroundColor: grey[800],
-            height: '5%'
+            backgroundColor: grey[800]
+            // height: '3%'
           }}
-          elevation={2}
+          elevation={0}
         >
           <Typography
-            variant="subtitle1"
+            variant="body1"
             style={{ color: grey[300] }}
-            align="center"
+            // align="center"
           >
-            {busStop.name}
+            <Grid container>
+              <Grid
+                item
+                xs={2}
+                className={this.props.classes.gridItem}
+                style={{ justifyContent: 'center' }}
+              >
+                #{busStop.number}
+              </Grid>
+              <Grid
+                item
+                xs={10}
+                className={this.props.classes.gridItem}
+                style={{ justifyContent: 'center' }}
+              >
+                {busStop.name}
+              </Grid>
+            </Grid>
           </Typography>
         </Paper>
         <List className={classes.busList}>{stopSchedule}</List>
