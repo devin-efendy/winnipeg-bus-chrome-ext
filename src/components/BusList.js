@@ -206,30 +206,36 @@ class BusList extends Component {
           }}
           elevation={0}
         >
-          <Typography
-            variant="body1"
-            style={{ color: grey[300] }}
-            // align="center"
-          >
-            <Grid container>
-              <Grid
-                item
-                xs={2}
-                className={this.props.classes.gridItem}
-                style={{ justifyContent: 'center' }}
+          <Grid container>
+            <Grid
+              item
+              xs={2}
+              className={this.props.classes.gridItem}
+              style={{ justifyContent: 'center' }}
+            >
+              <Typography
+                variant="body1"
+                style={{ color: grey[300] }}
+                // align="center"
               >
                 #{busStop.number}
-              </Grid>
-              <Grid
-                item
-                xs={10}
-                className={this.props.classes.gridItem}
-                style={{ justifyContent: 'center' }}
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              xs={10}
+              className={this.props.classes.gridItem}
+              style={{ justifyContent: 'center' }}
+            >
+              <Typography
+                variant="body1"
+                style={{ color: grey[300] }}
+                // align="center"
               >
                 {busStop.name}
-              </Grid>
+              </Typography>
             </Grid>
-          </Typography>
+          </Grid>
         </Paper>
         <List className={classes.busList}>{stopSchedule}</List>
       </div>

@@ -61,53 +61,94 @@ export default withStyles(styles)(
      */
     handleSearchBarSubmit = async e => {
       e.preventDefault();
-      const { position, searchBarInput: input } = this.state; // destructure
+      const {
+        position,
+        searchBarInput: input,
+        onBusListPage,
+        onStopListPage
+      } = this.state; // destructure
 
-      if (this.state.searchBarInput) {
+      if (this.state.searchBarInput && (onBusListPage || onStopListPage)) {
         this.setState(
           {
             onStopListPage: false,
             onBusListPage: false,
             selectedBusStop: { name: '', number: -1 },
             searchBarInput: ''
-          }, // setState
+          }, // states to be updated
           () => {
-            if (position && this.state.onStopListPage) {
-              TransitUtil.getStops(position.coords, input).then(res => {
-                this.setupStopsAndRoutes(res.data.stops);
-              }); // getStops
-            }
-          } // end - callback
-        );
-      } // If the user input is not empty
+            if (position) {
+              console.log('test');
+              TransitUtil.getStops(position.coords, input)
+                .then(res => {
+                  this.setupStopsAndRoutes(res.data.stops);
+                }) // successful promises
+                .catch(err => {
+                  console.log(err);
+                }); // handle error
+            } // if - position
+          } // callback function
+        ); // setState
+      } // endif the user input is not empty
     }; // end - handleSearchBarSubmit
 
+    /** handleBusStopClick
+     * @summary to handle the bus stop that was clicked by the user
+     *          this function will do an API call to look for the schedule of the
+     *          bus stop that was clicked/picked by the user
+     * @param {Number} busStop the number of the bus stop that the user picked
+     *                         then we look for the schedule for the stop with that number
+     */
     handleBusStopClick = busStop => {
+      // the setState is used to make the app render the loading page while
+      // we do the API call for the bus stop
       this.setState({ onStopListPage: false }, () => {
         this.setActiveStopSchedule(busStop);
-      });
+      }); // setState
     };
 
+    /** handleRefreshClick
+     * @summary to handle the event where the user clicked the refresh button
+     *          this will check whether the user is in the appropriate page and
+     *          also has already selected a bus stop.
+     *          If the condition is appropriate to be refreshed then this function
+     *          will make an API call to look for the updated/new schedule for the
+     *          selecter bus stop
+     * @param {Event} e event when the user clicked the refresh button
+     */
     handleRefreshClick = e => {
-      e.preventDefault();
+      e.preventDefault(); // prevent default event
 
       if (this.state.onBusListPage && this.state.selectedBusStop !== -1) {
         this.setState({ onBusListPage: false }, () => {
           this.setActiveStopSchedule(this.state.selectedBusStop.number);
-        });
-      }
+        }); // setState
+      } // endif
     };
 
+    /** handleBackArrowClick
+     * @summary to handle event where the user click the back arrow button while
+     *          they are on the bus list page.
+     *          this function will take the user to the bus stop selection page
+     * @param {Event} e event where the user clicked the back arrow button
+     */
     handleBackArrowClick = e => {
+      // state destructor
       const { onBusListPage, onStopListPage } = this.state;
+      // make sure that the user is in the bus list page
       if (!onStopListPage && onBusListPage) {
+        // change the state so that the app will render the stop list page
         this.setState({ onBusListPage: false, onStopListPage: true });
-      }
+      } // endif
     };
 
     handleUseLocation = e => {
       e.preventDefault();
-      if (this.state.nearbyStops.length > 0) {
+      const { onBusListPage, onStopListPage } = this.state;
+      if (
+        this.state.nearbyStops.length > 0 &&
+        (onBusListPage || onStopListPage)
+      ) {
         this.setState(
           {
             onStopListPage: false,
@@ -125,6 +166,10 @@ export default withStyles(styles)(
       this.setStopViaUserPosition();
     }
 
+    /** setStopViaUserPosition
+     * @summary this function will get the nearby stops near the user
+     *
+     */
     setStopViaUserPosition = () => {
       // const testData = {
       //   coords: { latitude: 49.81231, longitude: -97.1563673 }
