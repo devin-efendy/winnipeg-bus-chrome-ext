@@ -111,12 +111,12 @@ export default withStyles(styles)(
             onStopListPage: false,
             onBusListPage: false,
             selectedBusStop: { name: '', number: -1 }
-          },
+          }, // update state
           () => {
             this.setStopViaUserPosition();
-          }
-        );
-      }
+          } // callback to set up user's position
+        ); // setState
+      } // if
     };
 
     componentDidMount() {
