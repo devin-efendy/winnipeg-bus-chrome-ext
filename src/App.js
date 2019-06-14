@@ -62,6 +62,7 @@ export default withStyles(styles)(
     handleSearchBarSubmit = async e => {
       e.preventDefault();
       const { position, searchBarInput: input } = this.state; // destructure
+
       if (this.state.searchBarInput) {
         this.setState(
           {
@@ -71,10 +72,11 @@ export default withStyles(styles)(
             searchBarInput: ''
           }, // setState
           () => {
-            console.log(this.state);
-            TransitUtil.getStops(position.coords, input).then(res => {
-              this.setupStopsAndRoutes(res.data.stops);
-            }); // getStops
+            if (position && this.state.onStopListPage) {
+              TransitUtil.getStops(position.coords, input).then(res => {
+                this.setupStopsAndRoutes(res.data.stops);
+              }); // getStops
+            }
           } // end - callback
         );
       } // If the user input is not empty
@@ -124,23 +126,27 @@ export default withStyles(styles)(
     }
 
     setStopViaUserPosition = () => {
-      const testData = { latitude: 49.81231, longitude: -97.1563673 };
-      TransitUtil.getStops(testData).then(response => {
-        this.setupStopsAndRoutes(response.data.stops, true);
-      });
+      // const testData = {
+      //   coords: { latitude: 49.81231, longitude: -97.1563673 }
+      // };
+      // this.setState({ position: testData }, () => {
+      //   TransitUtil.getStops(testData.coords).then(response => {
+      //     this.setupStopsAndRoutes(response.data.stops, true);
+      //   });
+      // });
 
-      // window.navigator.geolocation.getCurrentPosition(
-      //   position => {
-      //     this.setState({ position }, () => {
-      //       TransitUtil.getStops(position.coords).then(response => {
-      //         this.setupStopsAndRoutes(response.data.stops, true);
-      //       }); //getStopsFromPosition
-      //     }); // Set State
-      //   },
-      //   err => {
-      //     console.log(err.message);
-      //   } // Geolocation error
-      // ); // Geolocation call
+      window.navigator.geolocation.getCurrentPosition(
+        position => {
+          this.setState({ position }, () => {
+            TransitUtil.getStops(position.coords).then(response => {
+              this.setupStopsAndRoutes(response.data.stops, true);
+            }); //getStopsFromPosition
+          }); // Set State
+        },
+        err => {
+          console.log(err.message);
+        } // Geolocation error
+      ); // Geolocation call
     }; // setStopViaUserPosition
 
     setupStopsAndRoutes = (stopsList, useLocation = false) => {
