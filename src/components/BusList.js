@@ -202,7 +202,6 @@ class BusList extends Component {
           style={{
             padding: '2%',
             backgroundColor: grey[800]
-            // height: '3%'
           }}
           elevation={0}
         >
@@ -213,11 +212,7 @@ class BusList extends Component {
               className={this.props.classes.gridItem}
               style={{ justifyContent: 'center' }}
             >
-              <Typography
-                variant="body1"
-                style={{ color: grey[300] }}
-                // align="center"
-              >
+              <Typography variant="body1" style={{ color: grey[300] }}>
                 #{busStop.number}
               </Typography>
             </Grid>
@@ -227,11 +222,7 @@ class BusList extends Component {
               className={this.props.classes.gridItem}
               style={{ justifyContent: 'center' }}
             >
-              <Typography
-                variant="body1"
-                style={{ color: grey[300] }}
-                // align="center"
-              >
+              <Typography variant="body1" style={{ color: grey[300] }}>
                 {busStop.name}
               </Typography>
             </Grid>

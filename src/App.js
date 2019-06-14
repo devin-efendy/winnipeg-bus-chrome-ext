@@ -142,13 +142,23 @@ export default withStyles(styles)(
       } // endif
     };
 
+    /** handleUseLocation
+     * @summary handle event where the user clicked the location button
+     *          this function will first do a checking if the condition is appropriate
+     *          to call the setStopViaUserPosition function
+     *          if the the condition are met call the setStopViaUserPosition function
+     * @param {Event} e event where the user click the location button
+     */
     handleUseLocation = e => {
-      e.preventDefault();
+      e.preventDefault(); // prevent the default event
+      // destrcucture the state
       const { onBusListPage, onStopListPage } = this.state;
-      if (
-        this.state.nearbyStops.length > 0 &&
-        (onBusListPage || onStopListPage)
-      ) {
+      // to call setStopViaUserPosition function we need to make sure that
+      // the program is not on the loading page
+      // this is also to prevent multiple API calls
+      if (onBusListPage || onStopListPage) {
+        // the setState set the program to render the loading page and also
+        // set the current selected bus stop to default, if there are any
         this.setState(
           {
             onStopListPage: false,
@@ -159,7 +169,7 @@ export default withStyles(styles)(
             this.setStopViaUserPosition();
           } // callback to set up user's position
         ); // setState
-      } // if
+      } // endif
     };
 
     componentDidMount() {
@@ -167,8 +177,11 @@ export default withStyles(styles)(
     }
 
     /** setStopViaUserPosition
-     * @summary this function will get the nearby stops near the user
-     *
+     * @summary this function will get the nearby stops near the user by:
+     *          1. Making a geolocation API call
+     *          2. If it's successful we perform another API call from Open Data Web Service
+     *             to get the nearby stops with the user latitude and longitude position
+     *             If the ODWS successful, we call the setup function
      */
     setStopViaUserPosition = () => {
       // const testData = {
@@ -187,36 +200,50 @@ export default withStyles(styles)(
               this.setupStopsAndRoutes(response.data.stops, true);
             }); //getStopsFromPosition
           }); // Set State
-        },
+        }, // callback if geolocation was successful
         err => {
           console.log(err.message);
-        } // Geolocation error
+        } // callback if geolocation result in error
       ); // Geolocation call
     }; // setStopViaUserPosition
 
+    /** setupStopsAndRoutes
+     * @summary to set up the stops and the routes inside the stops
+     * @param {Array} stopsList a list of stops from ODWS API call
+     * @param {Boolean} useLocation indicates if the stops that we set are stops nearby
+     */
     setupStopsAndRoutes = (stopsList, useLocation = false) => {
-      let allStopsRoute = [];
+      let allStopsRoute = []; // init empty array of stops and routes pair
 
+      /** runPromises
+       * @summary this function will do an API call to look for routes for every stops in
+       *          stopsList, EXCEPT the last stops
+       *          this also to make sure that every promises are successful before
+       *          we exit setupStopsAndRoutes
+       * @return {Promise} result
+       */
       const runPromises = () => {
         let result = Promise.resolve(TransitUtil.getRoute(stopsList[0].key));
 
         for (let i = 1; i < stopsList.length; i++) {
           result = result.then(res => {
+            // we push a bus stop number and routes pair to our array result allStopsRoute
             allStopsRoute.push({
               key: stopsList[i - 1].key,
               routes: res.data.routes
-            });
+            }); // push
             return TransitUtil.getRoute(stopsList[i].key);
-          });
-        }
+          }); // then, response
+        } // end for
 
         return result;
       };
 
+      // this will run the last promise for the last stops
       runPromises().then(res => {
         const lastKey = stopsList[stopsList.length - 1].key;
         allStopsRoute.push({ key: lastKey, routes: res.data.routes });
-
+        // set program state accordingly
         if (useLocation) {
           this.setState({
             nearbyStops: stopsList,
@@ -225,24 +252,32 @@ export default withStyles(styles)(
             allStopsRoute,
             onStopListPage: true,
             onBusListPage: false
-          });
-        } else {
+          }); // setState
+        } // if
+        else {
           this.setState({
             activeStop: stopsList,
             allStopsRoute,
             onStopListPage: true,
             onBusListPage: false
-          });
-        }
-      });
+          }); // setState
+        } // else
+        // endif
+      }); // runPromises, then, response
     };
 
+    /** setActiveStopSchedule
+     * @summary to set up bus list page that contains all the schedule for the stop
+     * @param {Number} stop the number of bus stop that will be use to perform an API call
+     *                      to get the schedule
+     */
     setActiveStopSchedule = stop => {
       TransitUtil.getSchedule(stop).then(({ data }) => {
-        const schedule = TransitUtil.parseSchedule(data);
+        const schedule = TransitUtil.parseSchedule(data); // parse the schedule
+        // find the bus stop that we looking for from our activeStop state
         const busStop = this.state.activeStop.find(item => {
           return item.key === stop;
-        });
+        }); // busStop
 
         this.setState({
           onBusListPage: true,
@@ -251,8 +286,8 @@ export default withStyles(styles)(
             name: busStop.name,
             number: busStop.number
           }
-        });
-      });
+        }); // setState
+      }); // then, response
     };
 
     render() {
