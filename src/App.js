@@ -294,6 +294,12 @@ export default withStyles(styles)(
       const { searchBarInput } = this.state;
       const { classes } = this.props;
 
+      /**
+       * @summary the purpose of this function is to do a conditional render
+       *          there are 3 pages in this program bus list, stop list, and loading page
+       *          the rendering will depends on the two states which are:
+       *          onStopListPage and onBusListPage
+       */
       const conditionalRender = () => {
         if (this.state.onStopListPage && !this.state.onBusListPage) {
           return (
@@ -319,7 +325,8 @@ export default withStyles(styles)(
             </div>
           );
         }
-      };
+        // endif
+      }; // conditionalRender
 
       const RenderMain = conditionalRender();
 
