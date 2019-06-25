@@ -56,6 +56,10 @@ class SearchBar extends React.Component {
   render() {
     const { classes } = this.props;
 
+    /**
+     * @summary this is to render the appropriate type of
+     *          Back Arrow icon according to the page
+     */
     const renderBackArrow = () => {
       if (this.props.onSchedulePage) {
         return (
