@@ -27,10 +27,6 @@ const styles = theme => ({
     marginRight: theme.spacing.unit * 2,
     marginLeft: 0,
     width: 'auto%'
-    // [theme.breakpoints.up('sm')]: {
-    //   marginLeft: theme.spacing.unit * 1,
-    //   width: 'auto'
-    // }
   },
   searchIcon: {
     width: theme.spacing.unit * 5,
@@ -63,6 +59,7 @@ class SearchBar extends React.Component {
     const renderBackArrow = () => {
       if (this.props.onSchedulePage) {
         return (
+          // Return a Back Arrow
           <IconButton
             color="inherit"
             onClick={e => {
@@ -72,7 +69,9 @@ class SearchBar extends React.Component {
             <ArrowBackIosSharp />
           </IconButton>
         );
-      } else {
+      } // if the user is on the schedule page
+      else {
+        // Return a disabled Back Arrow
         return (
           <IconButton
             color="inherit"
@@ -84,14 +83,17 @@ class SearchBar extends React.Component {
             <ArrowBackIosSharp />
           </IconButton>
         );
-      }
-    };
+      } // if the user is in the bus stop page or loading page
+    }; // end of renderBackArrow
 
     return (
       <div className={classes.grow}>
         <AppBar position="static">
           <Toolbar style={{ padding: '0 2px', backgroundColor: blue[500] }}>
+            {/* This is to make Back Arrow appear at the very left */}
             {renderBackArrow()}
+            {/* Render Search Input:
+                This will render an Input Icon and an Input Box*/}
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -109,7 +111,9 @@ class SearchBar extends React.Component {
                 }}
               />
             </div>
-
+            {/* End of Search Input */}
+            {/* This section will render the three Icon on the top right:
+                Send, Refresh, and MyLocation Icons */}
             <div className={classes.grow}>
               <IconButton
                 onClick={e => {
@@ -119,15 +123,16 @@ class SearchBar extends React.Component {
               >
                 <Send />
               </IconButton>
+              {/* end of Send icon */}
               <IconButton
                 color="inherit"
                 onClick={e => {
                   this.props.onRefresh(e);
                 }}
-                // disabled
               >
                 <Refresh />
               </IconButton>
+              {/* end of Refresh icon */}
               <IconButton
                 color="inherit"
                 onClick={e => {
@@ -136,11 +141,13 @@ class SearchBar extends React.Component {
               >
                 <MyLocation />
               </IconButton>
+              {/* end of Location icon */}
             </div>
+            {/* end of Icon group: Send, Refresh, Location */}
           </Toolbar>
         </AppBar>
       </div>
-    );
+    ); // end - return
   }
 }
 
