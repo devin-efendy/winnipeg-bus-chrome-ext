@@ -1,3 +1,18 @@
+/** SearchBar.js
+ *  This class component is used to render the search bar at the top of the extension
+ *  The purpose of this element is to let the user navigate through the App
+ *  This component includes:
+ *  1. Back Arrow Icon
+ *     To navigate to previous page
+ *  2. Input Bar
+ *     To let the user search for a stop or location
+ *  3. Send Icon
+ *     To submit user input and make the API call using it
+ *  4. Refresh Icon
+ *     To refresh the schedule page
+ *  5. MyLocation Icon
+ *     To let the user to use their location to look for bus stops
+ */
 import React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
@@ -13,6 +28,7 @@ import MyLocation from '@material-ui/icons/MyLocation';
 import ArrowBackIosSharp from '@material-ui/icons/ArrowBackIosSharp';
 import { blue } from '@material-ui/core/colors';
 
+// Styles that required to properly render the Element
 const styles = theme => ({
   grow: {
     flexGrow: 1
