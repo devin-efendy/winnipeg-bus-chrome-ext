@@ -15,6 +15,7 @@ import openData from '../api/openData';
  *                         about a particular bus
  */
 const getBusJSON = (info, number) => {
+  console.log(info);
   let arrivalTimeScheduled = info.times.departure.scheduled;
   let arrivalTimeEstimated = info.times.departure.estimated;
   let wifi = false;
