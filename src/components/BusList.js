@@ -42,9 +42,17 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'center'
   }
-});
+}); // end of styles
 
-// BusList class
+/** BusList Component
+ *  This class component will render a list of busses for the selected bus stop
+ *  Additionally, it will also show the stop number and stop name of the selected stop
+ *
+ *  Each bus inside the list will contains 3 informations:
+ *  1. Bus's number with color indicator
+ *  2. Bus's destination
+ *  3. Bus's arrival time and status with color indicator
+ */
 class BusList extends Component {
   renderTime = item => {
     let arrivalTime, scheduled, estimated, renderedTime;
@@ -174,7 +182,7 @@ class BusList extends Component {
           </Paper>
         );
         return renderedStatus;
-      };
+      }; // end of renderStatus
 
       // call the function
       const status = renderStatus();
@@ -270,9 +278,9 @@ class BusList extends Component {
         {/* Render the list of busses */}
         <List className={classes.busList}>{stopSchedule}</List>
       </div>
-    );
-  }
-}
+    ); // end of return
+  } // end of render
+} // end of BusList class
 
 BusList.propTypes = {
   classes: PropTypes.object.isRequired
