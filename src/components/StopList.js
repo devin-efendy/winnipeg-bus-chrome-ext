@@ -36,36 +36,71 @@ const styles = theme => ({
   }
 });
 
+const renderRoutesRow = (list, paperStyle) => {
+  const renderResult = list.map(el => {
+    let paperBGColor = blueGrey[700];
+    let paperFontColor = 'white';
+    if (el.coverage === 'rapid transit') {
+      paperBGColor = blue[700];
+    } else if (el.coverage === 'super express') {
+      paperBGColor = amber[400];
+      paperFontColor = 'black';
+    } else if (el.coverage === 'express') {
+      paperBGColor = amber[200];
+      paperFontColor = 'black';
+    }
+
+    return (
+      <Paper
+        key={el.key}
+        square={false}
+        elevation={0}
+        className={paperStyle}
+        style={{
+          background: `${paperBGColor}`,
+          color: `${paperFontColor}`
+        }}
+      >
+        <Typography color="inherit">{el.number.toString()}</Typography>
+      </Paper>
+    );
+  }); // routes map
+
+  return renderResult;
+};
 class StopList extends React.Component {
   renderRoute = data => {
     let routes = [];
+    let routesRow = [];
 
     if (data) {
-      routes = data.routes.map(el => {
-        let paperBGColor = blueGrey[700];
-        let paperFontColor = 'white';
-        if (el.coverage === 'rapid transit') {
-          paperBGColor = blue[700];
-        } else if (el.coverage === 'super express') {
-          paperBGColor = amber[400];
-          paperFontColor = 'black';
-        }
+      let numOfRoutes = data.routes.length;
+      const rows = Math.ceil(numOfRoutes / 8);
 
-        return (
-          <Paper
-            key={el.key}
-            square={false}
-            elevation={0}
-            className={this.props.classes.paperBus}
+      let startSlice = 0;
+      let endSlice = numOfRoutes < 8 ? numOfRoutes : 8;
+
+      for (let i = 0; i < rows; i++) {
+        const slicedRoutes = data.routes.slice(startSlice, endSlice);
+
+        routesRow = renderRoutesRow(slicedRoutes, this.props.classes.paperBus);
+
+        routes.push(
+          <div
+            key={i}
             style={{
-              background: `${paperBGColor}`,
-              color: `${paperFontColor}`
+              display: 'flex',
+              flexGrow: 1,
+              marginTop: '10px'
             }}
           >
-            <Typography color="inherit">{el.number.toString()}</Typography>
-          </Paper>
+            {routesRow}
+          </div>
         );
-      });
+
+        startSlice += 8;
+        endSlice = endSlice + 8 >= numOfRoutes ? numOfRoutes : (endSlice += 8);
+      }
     } // If we have matching data
 
     return routes;
@@ -102,15 +137,7 @@ class StopList extends React.Component {
                 primary={item.name}
                 secondary={`#${item.number}${insertSpace(12)}${distance}`}
               />
-              <div
-                style={{
-                  display: 'flex',
-                  flexGrow: 1,
-                  marginTop: '10px'
-                }}
-              >
-                {routes}
-              </div>
+              <div>{routes}</div>
             </div>
           </ListItem>
         );

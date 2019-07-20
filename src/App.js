@@ -78,7 +78,6 @@ export default withStyles(styles)(
           }, // states to be updated
           () => {
             if (position) {
-              console.log('test');
               TransitUtil.getStops(position.coords, input)
                 .then(res => {
                   this.setupStopsAndRoutes(res.data.stops);
@@ -184,27 +183,30 @@ export default withStyles(styles)(
      *             If the ODWS successful, we call the setup function
      */
     setStopViaUserPosition = () => {
-      // const testData = {
-      //   coords: { latitude: 49.81231, longitude: -97.1563673 }
-      // };
-      // this.setState({ position: testData }, () => {
-      //   TransitUtil.getStops(testData.coords).then(response => {
-      //     this.setupStopsAndRoutes(response.data.stops, true);
-      //   });
-      // });
-
-      window.navigator.geolocation.getCurrentPosition(
-        position => {
-          this.setState({ position }, () => {
-            TransitUtil.getStops(position.coords).then(response => {
-              this.setupStopsAndRoutes(response.data.stops, true);
-            }); //getStopsFromPosition
-          }); // Set State
-        }, // callback if geolocation was successful
-        err => {
-          console.log(err.message);
-        } // callback if geolocation result in error
-      ); // Geolocation call
+      const testRun = false;
+      if (testRun) {
+        const testData = {
+          coords: { latitude: 49.81231, longitude: -97.1563673 }
+        };
+        this.setState({ position: testData }, () => {
+          TransitUtil.getStops(testData.coords).then(response => {
+            this.setupStopsAndRoutes(response.data.stops, true);
+          });
+        });
+      } else {
+        window.navigator.geolocation.getCurrentPosition(
+          position => {
+            this.setState({ position }, () => {
+              TransitUtil.getStops(position.coords).then(response => {
+                this.setupStopsAndRoutes(response.data.stops, true);
+              }); //getStopsFromPosition
+            }); // Set State
+          }, // callback if geolocation was successful
+          err => {
+            console.log(err.message);
+          } // callback if geolocation result in error
+        ); // Geolocation call
+      }
     }; // setStopViaUserPosition
 
     /** setupStopsAndRoutes
