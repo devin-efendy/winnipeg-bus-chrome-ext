@@ -1,17 +1,20 @@
 {
   "manifest_version": 2,
-  "name": "react-chrome-extension-starter",
+  "name": "Winnipeg Bus",
   "author": "Devin Efendy",
-  "version": "1.0.1",
-  "description": "Starter Chrome Extension PopUp",
+  "version": "1.0.0",
+  "description": "Extension that displays bus stops and schedules in Winnipeg",
   "icons": {
-    "16": "logo-128.jpeg",
-    "48": "logo-128.jpeg",
-    "128": "logo-128.jpeg"
+    "16": "winnipeg-bus-logo-16.png",
+    "48": "winnipeg-bus-logo-48.png",
+    "128": "winnipeg-bus-logo-128.png"
   },
   "browser_action": {
     "default_popup": "index.html",
     "default_title": "Open the popup"
   },
-  "permissions": ["storage", "geolocation"]
+  "permissions": [
+    "storage",
+    "geolocation"
+  ]
 }

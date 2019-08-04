@@ -183,16 +183,14 @@ export default withStyles(styles)(
      *             If the ODWS successful, we call the setup function
      */
     setStopViaUserPosition = () => {
+      const winnipegPosition = { latitude: 49.8951, longitude: 97.1384 };
       const testRun = false;
       if (testRun) {
-        const testData = {
-          coords: { latitude: 49.81231, longitude: -97.1563673 }
-        };
-        this.setState({ position: testData }, () => {
-          TransitUtil.getStops(testData.coords).then(response => {
+        this.setState({ position: winnipegPosition }, () => {
+          TransitUtil.getStops(winnipegPosition).then(response => {
             this.setupStopsAndRoutes(response.data.stops, true);
-          });
-        });
+          }); // getStops
+        }); // setState
       } else {
         window.navigator.geolocation.getCurrentPosition(
           position => {
