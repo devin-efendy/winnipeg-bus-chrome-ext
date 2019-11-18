@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { Paper, Typography } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import React, { Component } from "react";
+import { Paper, Typography } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-import SearchBar from './components/SearchBar';
-import StopList from './components/StopList';
-import BusList from './components/BusList';
+import SearchBar from "./components/SearchBar";
+import StopList from "./components/StopList";
+import BusList from "./components/BusList";
 
-import TransitUtil from './util/TransitUtil';
+import TransitUtil from "./util/TransitUtil";
 
 const styles = theme => ({
   root: {
@@ -18,12 +18,12 @@ const styles = theme => ({
     margin: theme.spacing.unit * 3
   },
   loadingPage: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column'
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column"
   }
 });
 
@@ -35,9 +35,9 @@ export default withStyles(styles)(
       allStopsRoute: [],
       nearbyStops: [],
       nearbyStopsRoute: [],
-      selectedBusStop: { name: '', number: -1 },
+      selectedBusStop: { name: "", number: -1 },
       position: null,
-      searchBarInput: '',
+      searchBarInput: "",
       onStopListPage: false,
       onBusListPage: false
     };
@@ -73,8 +73,8 @@ export default withStyles(styles)(
           {
             onStopListPage: false,
             onBusListPage: false,
-            selectedBusStop: { name: '', number: -1 },
-            searchBarInput: ''
+            selectedBusStop: { name: "", number: -1 },
+            searchBarInput: ""
           }, // states to be updated
           () => {
             if (position) {
@@ -162,7 +162,7 @@ export default withStyles(styles)(
           {
             onStopListPage: false,
             onBusListPage: false,
-            selectedBusStop: { name: '', number: -1 }
+            selectedBusStop: { name: "", number: -1 }
           }, // update state
           () => {
             this.setStopViaUserPosition();
@@ -183,11 +183,12 @@ export default withStyles(styles)(
      *             If the ODWS successful, we call the setup function
      */
     setStopViaUserPosition = () => {
-      const winnipegPosition = { latitude: 49.8951, longitude: 97.1384 };
+      const winnipegPosition = { latitude: 49.8951, longitude: -97.1384 };
+      const uofmPosition = {latitude: 49.81011962890625, longitude: -97.13239288330078};
       const testRun = false;
       if (testRun) {
-        this.setState({ position: winnipegPosition }, () => {
-          TransitUtil.getStops(winnipegPosition).then(response => {
+        this.setState({ position: uofmPosition }, () => {
+          TransitUtil.getStops(uofmPosition).then(response => {
             this.setupStopsAndRoutes(response.data.stops, true);
           }); // getStops
         }); // setState
@@ -195,6 +196,7 @@ export default withStyles(styles)(
         window.navigator.geolocation.getCurrentPosition(
           position => {
             this.setState({ position }, () => {
+              console.log(position.coords);
               TransitUtil.getStops(position.coords).then(response => {
                 this.setupStopsAndRoutes(response.data.stops, true);
               }); //getStopsFromPosition
@@ -342,7 +344,7 @@ export default withStyles(styles)(
             onSchedulePage={this.state.onBusListPage}
           />
 
-          <div style={{ width: '100%', height: '486px' }}>{RenderMain}</div>
+          <div style={{ width: "100%", height: "486px" }}>{RenderMain}</div>
         </Paper>
       );
     }

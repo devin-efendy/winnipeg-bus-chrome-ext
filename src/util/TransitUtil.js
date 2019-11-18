@@ -5,7 +5,7 @@
  *          from Open Data Web Serivce API. Also, this class will process all the
  *          information that the we get from every successful API call
  */
-import openData from '../api/openData';
+import openData from "../api/openData";
 
 /**
  * To process bus JSON from API call to a custom JSON object that contain all necessary data
@@ -26,13 +26,13 @@ const getBusJSON = (info, number) => {
     arrivalTimeEstimated = info.times.arrival.estimated;
   } // if
   const name = info.variant.name;
-  let destination = '';
+  let destination = "";
   if (name) {
-    const nameSplit = name.split('to ');
+    const nameSplit = name.split("to ");
     if (nameSplit.length === 0) {
       destination = name;
     } else {
-      destination = name.split('to ')[1];
+      destination = name.split("to ")[1];
     }
   }
   const cancelled = info.cancelled;
@@ -65,9 +65,9 @@ const getBusJSON = (info, number) => {
  * @return {Object} object that contains parsed data of time
  */
 const parseTime = time => {
-  const dateTimePair = time.split('T');
-  const dateBuffer = dateTimePair[0].split('-');
-  const timeBuffer = dateTimePair[1].split(':');
+  const dateTimePair = time.split("T");
+  const dateBuffer = dateTimePair[0].split("-");
+  const timeBuffer = dateTimePair[1].split(":");
   // const timeBuffer = dateTimePair[1];
   const data = {
     year: parseInt(dateBuffer[0]),
@@ -154,13 +154,13 @@ const compareTime = (timeA, timeB, calcSec = true) => {
  * @param {Object} estimated object that contains estimated arrival/departure time
  */
 const getArrivalStatus = (scheduled, estimated) => {
-  let status = '';
+  let status = "";
   if (compareTime(scheduled, estimated, false) === 1) {
-    status = 'early';
+    status = "early";
   } else if (compareTime(scheduled, estimated, false) === -1) {
-    status = 'late';
+    status = "late";
   } else {
-    status = 'OK';
+    status = "OK";
   }
   return status;
 }; // end - getArrivalStatus
@@ -180,11 +180,11 @@ class TransitUtil {
     // query will be defaulted to API call query that search for nearby stops
     // if the user does not provide any search input
     let query =
-      '/stops.json?distance=500&lat=' +
+      "/stops.json?distance=500&lat=" +
       latitude +
-      '&lon=' +
+      "&lon=" +
       longitude +
-      '&api-key=FO8ZSABX3wyHFEo062j';
+      "&api-key=FO8ZSABX3wyHFEo062j";
 
     // If the user DOES provide a search input, then we use different API call
     if (userInput) {
@@ -236,7 +236,7 @@ class TransitUtil {
    * @return {Array} an array of busses that already sorted by arrival/departure time
    */
   static parseSchedule = data => {
-    const routesSchedule = data['stop-schedule']['route-schedules']; //get the schedules
+    const routesSchedule = data["stop-schedule"]["route-schedules"]; //get the schedules
     let scheduleList = []; // init empty list
 
     /**¡
@@ -250,7 +250,7 @@ class TransitUtil {
 
     routesSchedule.forEach(item => {
       const number = item.route.number;
-      const scheduledStops = item['scheduled-stops'];
+      const scheduledStops = item["scheduled-stops"];
 
       scheduledStops.forEach(routeSchedule => {
         const busInfo = getBusJSON(routeSchedule, number);
