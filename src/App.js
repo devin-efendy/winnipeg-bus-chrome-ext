@@ -9,13 +9,13 @@ import BusList from "./components/BusList";
 
 import TransitUtil from "./util/TransitUtil";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     width: 450,
-    height: 550
+    height: 550,
   },
   progress: {
-    margin: theme.spacing.unit * 3
+    margin: theme.spacing.unit * 3,
   },
   loadingPage: {
     width: "100%",
@@ -23,8 +23,8 @@ const styles = theme => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "column"
-  }
+    flexDirection: "column",
+  },
 });
 
 export default withStyles(styles)(
@@ -39,7 +39,7 @@ export default withStyles(styles)(
       position: null,
       searchBarInput: "",
       onStopListPage: false,
-      onBusListPage: false
+      onBusListPage: false,
     };
 
     /** handleSearchBarChange
@@ -49,7 +49,7 @@ export default withStyles(styles)(
      */
     handleSearchBarChange = ({ name, value }) => {
       this.setState({
-        [name]: value
+        [name]: value,
       }); // setState
     }; // end - handleSearchBarChange
 
@@ -59,13 +59,13 @@ export default withStyles(styles)(
      *          this will setup a new route for the searches that user submit
      * @param {Event} e event when the submit button clicked
      */
-    handleSearchBarSubmit = async e => {
+    handleSearchBarSubmit = async (e) => {
       e.preventDefault();
       const {
         position,
         searchBarInput: input,
         onBusListPage,
-        onStopListPage
+        onStopListPage,
       } = this.state; // destructure
 
       if (this.state.searchBarInput && (onBusListPage || onStopListPage)) {
@@ -74,15 +74,15 @@ export default withStyles(styles)(
             onStopListPage: false,
             onBusListPage: false,
             selectedBusStop: { name: "", number: -1 },
-            searchBarInput: ""
+            searchBarInput: "",
           }, // states to be updated
           () => {
             if (position) {
               TransitUtil.getStops(position.coords, input)
-                .then(res => {
+                .then((res) => {
                   this.setupStopsAndRoutes(res.data.stops);
                 }) // successful promises
-                .catch(err => {
+                .catch((err) => {
                   console.log(err);
                 }); // handle error
             } // if - position
@@ -98,7 +98,7 @@ export default withStyles(styles)(
      * @param {Number} busStop the number of the bus stop that the user picked
      *                         then we look for the schedule for the stop with that number
      */
-    handleBusStopClick = busStop => {
+    handleBusStopClick = (busStop) => {
       // the setState is used to make the app render the loading page while
       // we do the API call for the bus stop
       this.setState({ onStopListPage: false }, () => {
@@ -115,7 +115,7 @@ export default withStyles(styles)(
      *          selecter bus stop
      * @param {Event} e event when the user clicked the refresh button
      */
-    handleRefreshClick = e => {
+    handleRefreshClick = (e) => {
       e.preventDefault(); // prevent default event
 
       if (this.state.onBusListPage && this.state.selectedBusStop !== -1) {
@@ -131,7 +131,7 @@ export default withStyles(styles)(
      *          this function will take the user to the bus stop selection page
      * @param {Event} e event where the user clicked the back arrow button
      */
-    handleBackArrowClick = e => {
+    handleBackArrowClick = (e) => {
       // state destructor
       const { onBusListPage, onStopListPage } = this.state;
       // make sure that the user is in the bus list page
@@ -148,7 +148,7 @@ export default withStyles(styles)(
      *          if the the condition are met call the setStopViaUserPosition function
      * @param {Event} e event where the user click the location button
      */
-    handleUseLocation = e => {
+    handleUseLocation = (e) => {
       e.preventDefault(); // prevent the default event
       // destrcucture the state
       const { onBusListPage, onStopListPage } = this.state;
@@ -162,7 +162,7 @@ export default withStyles(styles)(
           {
             onStopListPage: false,
             onBusListPage: false,
-            selectedBusStop: { name: "", number: -1 }
+            selectedBusStop: { name: "", number: -1 },
           }, // update state
           () => {
             this.setStopViaUserPosition();
@@ -184,27 +184,47 @@ export default withStyles(styles)(
      */
     setStopViaUserPosition = () => {
       const winnipegPosition = { latitude: 49.8951, longitude: -97.1384 };
-      const uofmPosition = {latitude: 49.81011962890625, longitude: -97.13239288330078};
+      const uofmPosition = {
+        latitude: 49.81011962890625,
+        longitude: -97.13239288330078,
+      };
+
+      const testPosition = {latitude: 49.809460, longitude: -97.162620};
+
+      let options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 60000,
+      };
+
       const testRun = false;
       if (testRun) {
         this.setState({ position: uofmPosition }, () => {
-          TransitUtil.getStops(uofmPosition).then(response => {
+          TransitUtil.getStops(testPosition).then((response) => {
             this.setupStopsAndRoutes(response.data.stops, true);
           }); // getStops
         }); // setState
       } else {
         window.navigator.geolocation.getCurrentPosition(
-          position => {
+          (position) => {
             this.setState({ position }, () => {
-              console.log(position.coords);
-              TransitUtil.getStops(position.coords).then(response => {
+              console.log(position);
+              TransitUtil.getStops(position.coords).then((response) => {
+                // console.log(response);
                 this.setupStopsAndRoutes(response.data.stops, true);
               }); //getStopsFromPosition
             }); // Set State
           }, // callback if geolocation was successful
-          err => {
+          (err) => {
             console.log(err.message);
-          } // callback if geolocation result in error
+            // If there's error on geolocation use winnipeg's position
+            this.setState({ position: winnipegPosition }, () => {
+              TransitUtil.getStops(winnipegPosition).then((response) => {
+                this.setupStopsAndRoutes(response.data.stops, true);
+              }); //getStopsFromPosition
+            }); // Set State
+          }, // callback if geolocation result in error
+          options
         ); // Geolocation call
       }
     }; // setStopViaUserPosition
@@ -228,11 +248,11 @@ export default withStyles(styles)(
         let result = Promise.resolve(TransitUtil.getRoute(stopsList[0].key));
 
         for (let i = 1; i < stopsList.length; i++) {
-          result = result.then(res => {
+          result = result.then((res) => {
             // we push a bus stop number and routes pair to our array result allStopsRoute
             allStopsRoute.push({
               key: stopsList[i - 1].key,
-              routes: res.data.routes
+              routes: res.data.routes,
             }); // push
             return TransitUtil.getRoute(stopsList[i].key);
           }); // then, response
@@ -242,7 +262,7 @@ export default withStyles(styles)(
       };
 
       // this will run the last promise for the last stops
-      runPromises().then(res => {
+      runPromises().then((res) => {
         const lastKey = stopsList[stopsList.length - 1].key;
         allStopsRoute.push({ key: lastKey, routes: res.data.routes });
         // set program state accordingly
@@ -253,7 +273,7 @@ export default withStyles(styles)(
             activeStop: stopsList,
             allStopsRoute,
             onStopListPage: true,
-            onBusListPage: false
+            onBusListPage: false,
           }); // setState
         } // if
         else {
@@ -261,7 +281,7 @@ export default withStyles(styles)(
             activeStop: stopsList,
             allStopsRoute,
             onStopListPage: true,
-            onBusListPage: false
+            onBusListPage: false,
           }); // setState
         } // else
         // endif
@@ -273,11 +293,11 @@ export default withStyles(styles)(
      * @param {Number} stop the number of bus stop that will be use to perform an API call
      *                      to get the schedule
      */
-    setActiveStopSchedule = stop => {
+    setActiveStopSchedule = (stop) => {
       TransitUtil.getSchedule(stop).then(({ data }) => {
         const schedule = TransitUtil.parseSchedule(data); // parse the schedule
         // find the bus stop that we looking for from our activeStop state
-        const busStop = this.state.activeStop.find(item => {
+        const busStop = this.state.activeStop.find((item) => {
           return item.key === stop;
         }); // busStop
 
@@ -286,8 +306,8 @@ export default withStyles(styles)(
           activeStopSchedule: schedule,
           selectedBusStop: {
             name: busStop.name,
-            number: busStop.number
-          }
+            number: busStop.number,
+          },
         }); // setState
       }); // then, response
     };

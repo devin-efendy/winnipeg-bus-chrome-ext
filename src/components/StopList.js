@@ -50,6 +50,11 @@ const renderRoutesRow = (list, paperStyle) => {
       paperFontColor = 'black';
     }
 
+    let busName = el.number.toString();
+    if(busName === 'BLUE') {
+      busName = 'B';
+    }
+
     return (
       <Paper
         key={el.key}
@@ -61,7 +66,7 @@ const renderRoutesRow = (list, paperStyle) => {
           color: `${paperFontColor}`
         }}
       >
-        <Typography color="inherit">{el.number.toString()}</Typography>
+        <Typography color="inherit">{busName}</Typography>
       </Paper>
     );
   }); // routes map
