@@ -187,6 +187,11 @@ class BusList extends Component {
       // call the function
       const status = renderStatus();
 
+      let busNumberRender = item.number.toString();
+      if(busNumberRender === 'BLUE') {
+        busNumberRender = 'B';
+      }
+
       return (
         <ListItem
           button
@@ -204,7 +209,7 @@ class BusList extends Component {
                 style={{ background: busNumBG }}
               >
                 <Typography variant="body1" style={{ color: busNumFontColor }}>
-                  {item.number}
+                  {busNumberRender}
                 </Typography>
               </Paper>
             </Grid>
