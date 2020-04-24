@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Winnipeg Bus",
   "author": "Devin Efendy",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Extension that displays bus stops and schedules in Winnipeg",
   "icons": {
     "16": "winnipeg-bus-logo-16.png",
