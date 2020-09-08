@@ -1,47 +1,47 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   List,
   ListItem,
   ListItemText,
   Grid,
   Paper,
-  Typography
-} from '@material-ui/core';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+  Typography,
+} from "@material-ui/core";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
 import {
   blueGrey,
   amber,
   blue,
   green,
   red,
-  grey
-} from '@material-ui/core/colors';
+  grey,
+} from "@material-ui/core/colors";
 
 // MUI theme Style
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
-    width: '100%',
-    height: '486px'
+    width: "100%",
+    height: "486px",
   },
   busList: {
-    position: 'relative',
-    overflow: 'auto',
-    height: '91%',
-    padding: 0
+    position: "relative",
+    overflow: "auto",
+    height: "91%",
+    padding: 0,
   },
   gridItem: {
-    display: 'flex',
-    alignItems: 'center'
+    display: "flex",
+    alignItems: "center",
   },
   busNumber: {
-    padding: '3px',
-    width: '30px',
-    height: '30px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
+    padding: "3px",
+    width: "30px",
+    height: "30px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 }); // end of styles
 
 /** BusList Component
@@ -54,7 +54,7 @@ const styles = theme => ({
  *  3. Bus's arrival time and status with color indicator
  */
 class BusList extends Component {
-  renderTime = item => {
+  renderTime = (item) => {
     let arrivalTime, scheduled, estimated, renderedTime;
     const currentTime = new Date();
 
@@ -70,8 +70,8 @@ class BusList extends Component {
     const em = item.arrivalEstimated.minute; // estimated minute of bus's arrival
     const hrSTR = eh.toString(); // string form of estimated hour of bus's arrival
     const minSTR = em.toString(); // string form of estimated minute of bus's arrival
-    const hr = hrSTR.padStart(2, '0'); // string form of eh which padded with zero
-    const min = minSTR.padStart(2, '0'); // string form of em which padded with zero
+    const hr = hrSTR.padStart(2, "0"); // string form of eh which padded with zero
+    const min = minSTR.padStart(2, "0"); // string form of em which padded with zero
     const resultTime = `${hr}:${min}`; // formatted bus's arrival time in hh:mm
 
     // this will calculate the correct time to display
@@ -95,23 +95,23 @@ class BusList extends Component {
       renderedTime = (
         <ListItemText
           primaryTypographyProps={{
-            variant: 'subheading',
-            style: { display: 'flex', justifyContent: 'flex-end' }
+            variant: "subheading",
+            style: { display: "flex", justifyContent: "flex-end" },
           }}
           primary={resultTime}
         />
       );
     } else if (arrivalTime <= 30) {
-      arrivalTime = arrivalTime.toString().padStart(2, '0') + ' min';
+      arrivalTime = arrivalTime.toString().padStart(2, "0") + " min";
       renderedTime = (
         <ListItemText
           primaryTypographyProps={{
-            variant: 'subheading',
-            style: { display: 'flex', justifyContent: 'flex-end' }
+            variant: "subheading",
+            style: { display: "flex", justifyContent: "flex-end" },
           }}
           secondaryTypographyProps={{
-            variant: 'body1',
-            style: { display: 'flex', justifyContent: 'flex-end' }
+            variant: "body1",
+            style: { display: "flex", justifyContent: "flex-end" },
           }}
           primary={arrivalTime}
           secondary={resultTime}
@@ -127,14 +127,14 @@ class BusList extends Component {
    *          Each item contains bus number, destination, and arrival time & status
    * @param {Array} schedule the bus schedule that need to be rendered
    */
-  renderBusses = schedule => {
-    const scheduleList = schedule.map(item => {
+  renderBusses = (schedule) => {
+    const scheduleList = schedule.map((item) => {
       // Format arrival hour and minute e.g. pad with zeros
       let time = this.renderTime(item);
 
       // Choose the background and font color for each bus coverage
       let busNumBG = blueGrey[700];
-      let busNumFontColor = 'white';
+      let busNumFontColor = "white";
 
       /**
        * this if statement is to determine what color of the bus depending of the coverage.
@@ -142,11 +142,11 @@ class BusList extends Component {
        * rapid transit: blue
        * super express: amber
        */
-      if (item.coverage === 'rapid transit') {
+      if (item.coverage === "rapid transit") {
         busNumBG = blue[600];
-      } else if (item.coverage === 'super express') {
+      } else if (item.coverage === "super express") {
         busNumBG = amber[400];
-        busNumFontColor = 'black';
+        busNumFontColor = "black";
       } // endif
 
       /**
@@ -159,15 +159,15 @@ class BusList extends Component {
       const renderStatus = () => {
         let renderedStatus = null;
         let statusColor = blue[500];
-        let status = 'OK';
+        let status = "OK";
 
         // determine the arrival status symbol
-        if (item.arrivalStatus === 'late') {
-          status = 'L';
+        if (item.arrivalStatus === "late") {
+          status = "L";
           statusColor = red[500];
-        } else if (item.arrivalStatus === 'early') {
-          status = 'E';
-          statusColor = green['A400'];
+        } else if (item.arrivalStatus === "early") {
+          status = "E";
+          statusColor = green["A400"];
         } //endif
 
         renderedStatus = (
@@ -176,7 +176,7 @@ class BusList extends Component {
             className={this.props.classes.busNumber}
             style={{ backgroundColor: statusColor }}
           >
-            <Typography variant="caption" style={{ color: 'white' }}>
+            <Typography variant="caption" style={{ color: "white" }}>
               {status}
             </Typography>
           </Paper>
@@ -188,8 +188,8 @@ class BusList extends Component {
       const status = renderStatus();
 
       let busNumberRender = item.number.toString();
-      if(busNumberRender === 'BLUE') {
-        busNumberRender = 'B';
+      if (busNumberRender === "BLUE") {
+        busNumberRender = "B";
       }
 
       return (
@@ -197,7 +197,7 @@ class BusList extends Component {
           button
           key={item.key}
           divider={true}
-          style={{ position: 'relative', overflow: 'auto' }}
+          style={{ position: "relative", overflow: "auto" }}
         >
           <Grid container>
             {/* Bus Number */}
@@ -224,7 +224,7 @@ class BusList extends Component {
               item
               xs={4}
               className={this.props.classes.gridItem}
-              style={{ justifyContent: 'center' }}
+              style={{ justifyContent: "center" }}
             >
               {time}
               {status}
@@ -249,8 +249,8 @@ class BusList extends Component {
         <Paper
           square={true}
           style={{
-            padding: '2%',
-            backgroundColor: grey[800]
+            padding: "2%",
+            backgroundColor: grey[800],
           }}
           elevation={0}
         >
@@ -259,7 +259,7 @@ class BusList extends Component {
               item
               xs={2}
               className={this.props.classes.gridItem}
-              style={{ justifyContent: 'center' }}
+              style={{ justifyContent: "center" }}
             >
               <Typography variant="body1" style={{ color: grey[300] }}>
                 #{busStop.number}
@@ -270,7 +270,7 @@ class BusList extends Component {
               item
               xs={10}
               className={this.props.classes.gridItem}
-              style={{ justifyContent: 'center' }}
+              style={{ justifyContent: "center" }}
             >
               <Typography variant="body1" style={{ color: grey[300] }}>
                 {busStop.name}
@@ -288,7 +288,7 @@ class BusList extends Component {
 } // end of BusList class
 
 BusList.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(BusList);

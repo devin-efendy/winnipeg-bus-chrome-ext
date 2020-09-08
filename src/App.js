@@ -189,7 +189,7 @@ export default withStyles(styles)(
         longitude: -97.13239288330078,
       };
 
-      const testPosition = {latitude: 49.809460, longitude: -97.162620};
+      const testPosition = { latitude: 49.80946, longitude: -97.16262 };
 
       let options = {
         enableHighAccuracy: true,

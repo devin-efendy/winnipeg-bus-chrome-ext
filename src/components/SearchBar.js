@@ -1,49 +1,49 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { AppBar, InputBase, Toolbar, IconButton } from '@material-ui/core';
-import { fade } from '@material-ui/core/styles/colorManipulator';
-import { withStyles } from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
-import Refresh from '@material-ui/icons/Refresh';
-import Send from '@material-ui/icons/Send';
-import MyLocation from '@material-ui/icons/MyLocation';
-import ArrowBackIosSharp from '@material-ui/icons/ArrowBackIosSharp';
-import { blue } from '@material-ui/core/colors';
+import React from "react";
+import PropTypes from "prop-types";
+import { AppBar, InputBase, Toolbar, IconButton } from "@material-ui/core";
+import { fade } from "@material-ui/core/styles/colorManipulator";
+import { withStyles } from "@material-ui/core/styles";
+import SearchIcon from "@material-ui/icons/Search";
+import Refresh from "@material-ui/icons/Refresh";
+import Send from "@material-ui/icons/Send";
+import MyLocation from "@material-ui/icons/MyLocation";
+import ArrowBackIosSharp from "@material-ui/icons/ArrowBackIosSharp";
+import { blue } from "@material-ui/core/colors";
 
 // Styles that required to properly render the Element
-const styles = theme => ({
+const styles = (theme) => ({
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   search: {
-    position: 'relative',
+    position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25)
+    "&:hover": {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
     },
     marginRight: theme.spacing.unit * 2,
     marginLeft: 0,
-    width: 'auto%'
+    width: "auto%",
   },
   searchIcon: {
     width: theme.spacing.unit * 5,
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   inputRoot: {
-    color: 'inherit'
+    color: "inherit",
   },
   inputInput: {
     padding: theme.spacing.unit * 1,
     paddingLeft: theme.spacing.unit * 5,
-    transition: theme.transitions.create('width'),
-    width: '100%'
-  }
+    transition: theme.transitions.create("width"),
+    width: "100%",
+  },
 }); // end of styles
 
 /** SearchBar.js
@@ -75,7 +75,7 @@ class SearchBar extends React.Component {
           // Return a Back Arrow
           <IconButton
             color="inherit"
-            onClick={e => {
+            onClick={(e) => {
               this.props.onBackHandler(e);
             }}
           >
@@ -88,7 +88,7 @@ class SearchBar extends React.Component {
         return (
           <IconButton
             color="inherit"
-            onClick={e => {
+            onClick={(e) => {
               this.props.onBackHandler(e);
             }}
             disabled
@@ -102,7 +102,7 @@ class SearchBar extends React.Component {
     return (
       <div className={classes.grow}>
         <AppBar position="static">
-          <Toolbar style={{ padding: '0 2px', backgroundColor: blue[500] }}>
+          <Toolbar style={{ padding: "0 2px", backgroundColor: blue[500] }}>
             {/* This is to make Back Arrow appear at the very left */}
             {renderBackArrow()}
             {/* Render Search Input:
@@ -120,7 +120,7 @@ class SearchBar extends React.Component {
                 placeholder="Search…"
                 classes={{
                   root: classes.inputRoot,
-                  input: classes.inputInput
+                  input: classes.inputInput,
                 }}
               />
             </div>
@@ -129,7 +129,7 @@ class SearchBar extends React.Component {
                 Send, Refresh, and MyLocation Icons */}
             <div className={classes.grow}>
               <IconButton
-                onClick={e => {
+                onClick={(e) => {
                   this.props.onSubmitHandler(e);
                 }}
                 color="inherit"
@@ -139,7 +139,7 @@ class SearchBar extends React.Component {
               {/* end of Send icon */}
               <IconButton
                 color="inherit"
-                onClick={e => {
+                onClick={(e) => {
                   this.props.onRefresh(e);
                 }}
               >
@@ -148,7 +148,7 @@ class SearchBar extends React.Component {
               {/* end of Refresh icon */}
               <IconButton
                 color="inherit"
-                onClick={e => {
+                onClick={(e) => {
                   this.props.onUseLocationHandler(e);
                 }}
               >
@@ -165,7 +165,7 @@ class SearchBar extends React.Component {
 }
 
 SearchBar.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(SearchBar);
